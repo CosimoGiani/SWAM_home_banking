@@ -1,0 +1,6 @@
+• Il file standalone.xml si trova:
+..\WildFly\wildfly-26.1.0.Final\standalone\configuration
+
+
+• Il file module.xml si trova:
+..\WildFly\wildfly-26.1.0.Final\modules\system\layers\base\org\mariadb\main
