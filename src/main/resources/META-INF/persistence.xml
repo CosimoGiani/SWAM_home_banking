@@ -4,12 +4,13 @@
 		<jta-data-source>jakartaDS</jta-data-source>
 		
 		<class>model.User</class>
+		<class>model.BaseEntity</class>
 		
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 			
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create" />
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.use_sql_comments" value="true" />

@@ -4,7 +4,21 @@
     <meta charset="UTF-8"/>
     <title>Hello</title>
   </h:head>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript">
+  $.ajax({
+	  type: "POST",
+	  url: "http://localhost:8080/home.banking/api/prova/provaPost/ciao",
+	  success: function(result){
+		  console.log(result);
+		}
+
+	});
+
+  </script>
+  
   <h:body>
-    <p>#{helloBean.message}</p>
+    <p>Hola!</p>
   </h:body>
 </html>
