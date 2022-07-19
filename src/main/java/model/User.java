@@ -2,8 +2,13 @@ package model;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -18,10 +23,14 @@ public class User extends BaseEntity {
 	private String address;
 	private String phoneNumber;
 	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<BankAccount> bankAccounts;
+	
 	User() {}
 	
 	public User(String uuid) {
 		super(uuid);
+		this.bankAccounts = new ArrayList<BankAccount>();
 	}
 	
 	public String getEmail() {
@@ -97,6 +106,18 @@ public class User extends BaseEntity {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	public List<BankAccount> getBankAccounts() {
+		return bankAccounts;
+	}
+	
+	public void setBankAccounts(List<BankAccount> bankAccounts) {
+		this.bankAccounts = bankAccounts;
+	}
+	
+	public void addBankAccountToList(BankAccount bankAccount) {
+		this.bankAccounts.add(bankAccount);
 	}
 
 }

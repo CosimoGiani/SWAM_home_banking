@@ -8,7 +8,9 @@ import javax.ejb.Startup;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import dao.BankAccountDao;
 import dao.UserDao;
+import model.BankAccount;
 import model.User;
 
 @Singleton
@@ -18,17 +20,23 @@ public class LoadMocks {
 	@Inject
 	private UserDao userDao;
 	
+	@Inject
+	private BankAccountDao accountDao;
+	
 	@PostConstruct
 	@Transactional
 	public void init(){
-		//userDao.deleteUsers();		
 		
 		System.out.println("initializing database.. ");
 		User user1 = createUser("user1@example.com", "pass1");
 		User user2 = createUser("user2@example.com", "pass2");
 		
+		BankAccount account1 = createBankAccount(user1);
+		
 		userDao.save(user1);
 		userDao.save(user2);
+		
+		accountDao.save(account1);
 
 		System.out.println(".. database initialized! ");
 		
@@ -39,6 +47,12 @@ public class LoadMocks {
 		user.setEmail(email);
 		user.setEncryptedPassword(password);
 		return user;
+	}
+	
+	private BankAccount createBankAccount(User user) {
+		BankAccount account = new BankAccount(UUID.randomUUID().toString());
+		user.addBankAccountToList(account);
+		return account;
 	}
 
 }
