@@ -6,23 +6,23 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import model.enumeration.BankAccountType;
 
 @Entity
 @Table(name = "bankAccounts")
 public class BankAccount extends BaseEntity {
 	
-	public enum Type {
-		Under30,
-		Ordinario,
-		Investitore
-	}
-	
 	private String accountNumber;
 	private float balance;
 	private String iban;
 	//private List<String> transactions;	// dovremo poi passare la classe transazioni
-	private Type type;
+	private BankAccountType type;
 	//private List<String> cards;			// anche qui quando si crea la classe carta
+	
+	@Transient
+	private BankAccountDetails details;
 	
 	BankAccount() {}
 	
@@ -54,12 +54,13 @@ public class BankAccount extends BaseEntity {
 		this.iban = iban;
 	}
 
-	public Type getType() {
+	public BankAccountType getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(BankAccountType type) {
 		this.type = type;
+		this.details = new BankAccountDetails(type);
 	}
 
 	/*public List<String> getTransactions() {

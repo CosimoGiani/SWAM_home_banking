@@ -12,6 +12,7 @@ import dao.BankAccountDao;
 import dao.UserDao;
 import model.BankAccount;
 import model.User;
+import model.enumeration.BankAccountType;
 
 @Singleton
 @Startup
@@ -22,6 +23,8 @@ public class LoadMocks {
 	
 	@Inject
 	private BankAccountDao accountDao;
+	
+	//private BankAccountType type = ;
 	
 	@PostConstruct
 	@Transactional
@@ -52,6 +55,7 @@ public class LoadMocks {
 	private BankAccount createBankAccount(User user) {
 		BankAccount account = new BankAccount(UUID.randomUUID().toString());
 		user.addBankAccountToList(account);
+		account.setType(BankAccountType.ORDINARIO);
 		return account;
 	}
 
