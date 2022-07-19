@@ -2,8 +2,8 @@ package rest.service;
 
 import java.io.InputStream;
 import java.io.File;
+import java.io.IOException;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,8 +14,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+// import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+// import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import rest.controller.RegistrationController;
 
@@ -35,18 +37,33 @@ public class RegistrationService {
 		return response.build();
 	}
 	
-
+	/*
 	@POST
 	@Path("send")
-	@Consumes({MediaType.MULTIPART_FORM_DATA})
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response register(
-			@FormDataParam("PDF") InputStream uploadedInputStream,
-			@FormDataParam("PDF") FormDataContentDisposition tmp,
+			@FormDataParam("File") InputStream uploadedInputStream,
+			// @FormDataParam("File") FormDataContentDisposition tmp,
 			@FormDataParam("email") String email,
 			@FormDataParam("password") String password) {
 		
-		
-		
 		return registrationController.createAccount(uploadedInputStream, email, password);
+	}
+	*/
+	
+	@POST
+	@Path("send")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response register(MultipartFormDataInput input) {
+
+		try {
+			InputStream uploadedInputStream = input.getFormDataPart("PDF", InputStream.class, null);
+			String email = input.getFormDataPart("email", String.class, null);
+		    String password = input.getFormDataPart("password", String.class, null);
+			return registrationController.createAccount(uploadedInputStream, email, password);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.status(500).entity("Internal Error").build();
+		}		
 	}
 }

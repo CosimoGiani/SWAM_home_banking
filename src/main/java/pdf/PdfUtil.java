@@ -63,7 +63,7 @@ public class PdfUtil {
 	    
 	    Map<String, Object> data = extractData(filePath);
 	    
-	    System.out.println(data);
+	    // System.out.println(data);
 	    
 		cleanUp(file_path);
 	    

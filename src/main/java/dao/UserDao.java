@@ -43,6 +43,7 @@ public class UserDao implements Serializable {
 							  .setParameter("email", email)
 							  .setMaxResults(1)
 							  .getResultList();
+		
 		if(result.isEmpty()) {
 			return false;
 		} else {
