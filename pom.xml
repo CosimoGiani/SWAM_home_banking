@@ -15,6 +15,14 @@
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 	</properties>
 	
+	<repositories>
+        <repository>
+            <id>com.e-iceblue</id>
+            <name>e-iceblue</name>
+            <url>https://repo.e-iceblue.com/nexus/content/groups/public/</url>
+        </repository>
+	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>jakarta.platform</groupId>
@@ -43,6 +51,11 @@
 		    <artifactId>jersey-media-multipart</artifactId> 
 		    <version>2.26</version> 
 		</dependency> 
+	    <dependency>
+	        <groupId>e-iceblue</groupId>
+	        <artifactId>spire.pdf.free</artifactId>
+	        <version>5.1.0</version>
+	    </dependency>
 	</dependencies>
 	
 	<build>
