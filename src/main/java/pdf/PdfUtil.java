@@ -3,6 +3,9 @@ package pdf;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,7 +14,6 @@ import java.io.FileOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -22,8 +24,8 @@ import com.spire.pdf.widget.PdfFormWidget;
 import com.spire.pdf.widget.PdfRadioButtonListFieldWidget;
 import com.spire.pdf.widget.PdfTextBoxFieldWidget;
 
-import java.util.Date;
 
+@ApplicationScoped
 public class PdfUtil {
 	private String file_path;
 	private File pdf;
@@ -46,7 +48,7 @@ public class PdfUtil {
 		return this.pdf;
 	}
 	
-	public boolean savePdf(InputStream uploadedInputStream) throws FileNotFoundException, IOException, ParseException {
+	public Map<String, Object> extractData(InputStream uploadedInputStream) throws FileNotFoundException, IOException, ParseException {
 		String fileName = UUID.randomUUID().toString() + ".pdf";
 		String filePath = upload_folder_path + fileName;
 		
@@ -63,12 +65,9 @@ public class PdfUtil {
 	    
 	    System.out.println(data);
 	    
-	    // TODO: aggiungere la tupla su db
+		cleanUp(file_path);
 	    
-	    File f = new File(filePath);
-	    f.delete();
-	    
-	    return true;
+	    return data;
 	}
 	
 	private Map<String, Object> extractData(String filePath) throws ParseException {
@@ -86,14 +85,13 @@ public class PdfUtil {
 		
 		if(containsDigit(name) || containsDigit(surname)) {
 			pdf.close();
-			File f = new File(filePath);
-		    f.delete();
+			cleanUp(file_path);
 			throw new IllegalArgumentException("Name or Surname contains a number!");
 		}
 		
-		String gg = ((PdfTextBoxFieldWidget)fieldsList.get(2)).getText();
-		String mm = ((PdfTextBoxFieldWidget)fieldsList.get(3)).getText();
-		String aaaa = ((PdfTextBoxFieldWidget)fieldsList.get(4)).getText();	   
+		String gg = ((PdfTextBoxFieldWidget)fieldsList.get(3)).getText(); // as there is a mismatch in the pdf
+		String mm = ((PdfTextBoxFieldWidget)fieldsList.get(4)).getText();
+		String aaaa = ((PdfTextBoxFieldWidget)fieldsList.get(5)).getText();	   
 		
 		LocalDate birthDay = LocalDate.of(Integer.parseInt(aaaa), Integer.parseInt(mm), Integer.parseInt(gg));
 		LocalDate currentDate = LocalDate.now();
@@ -102,12 +100,11 @@ public class PdfUtil {
 		Period age = Period.between(birthDay, currentDate);
 		if(age.getYears() < 18) {
 			pdf.close();
-			File f = new File(filePath);
-		    f.delete();
+			cleanUp(file_path);
 			throw new IllegalArgumentException("You are too young to open a bank account!");
 		}
 		
-		String city = ((PdfTextBoxFieldWidget)fieldsList.get(5)).getText();
+		String city = ((PdfTextBoxFieldWidget)fieldsList.get(2)).getText(); // as there is a mismatch in the pdf
 		String province = ((PdfTextBoxFieldWidget)fieldsList.get(6)).getText();
 		String address = ((PdfTextBoxFieldWidget)fieldsList.get(7)).getText();
 		
@@ -122,8 +119,7 @@ public class PdfUtil {
 		
 		if(!isLegalPhoneNumber(phone)) {
 			pdf.close();
-			File f = new File(filePath);
-		    f.delete();
+			cleanUp(file_path);
 			throw new IllegalArgumentException("Phone Number is not Valid!");
 		}
 		
@@ -140,8 +136,7 @@ public class PdfUtil {
 		
 		if(selectedBankAccount == "Under30" && age.getYears() > 30) {
 			pdf.close();
-			File f = new File(filePath);
-		    f.delete();
+			cleanUp(file_path);
 			throw new IllegalArgumentException("You are too old to get an Under30 account!");
 		}
 		
@@ -188,6 +183,11 @@ public class PdfUtil {
 		else {
 			return false;
 		}
+	}
+	
+	private void cleanUp(String filePath) {
+		File f = new File(filePath);
+	    f.delete();
 	}
 	
 }

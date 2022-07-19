@@ -2,6 +2,7 @@ package model;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,10 @@ public class User extends BaseEntity {
 	private String password;
 	private String firstname;
 	private String lastname;
-	private String dateOfBirth;
+	private LocalDate dateOfBirth;
 	private String address;
+	private String city;
+	private String province;
 	private String phoneNumber;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -57,6 +60,22 @@ public class User extends BaseEntity {
 		this.address = address;
 	}
 	
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -80,15 +99,15 @@ public class User extends BaseEntity {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-
-	public String getDateOfBirth() {
+	
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	
+
 	// This method is used to set an encrypted password when a new user is created
 	public void setEncryptedPassword(String password) {
 		String encryptedPassword;

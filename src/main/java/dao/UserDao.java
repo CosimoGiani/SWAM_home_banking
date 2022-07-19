@@ -37,5 +37,17 @@ public class UserDao implements Serializable {
 		}
 		return result.get(0);
 	}
+	
+	public boolean isEmailInDB(String email) {
+		List<User> result = em.createQuery("from User where email = :email ", User.class)
+							  .setParameter("email", email)
+							  .setMaxResults(1)
+							  .getResultList();
+		if(result.isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 }
