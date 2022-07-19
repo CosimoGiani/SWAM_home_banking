@@ -7,7 +7,7 @@ import dao.UserDao;
 import model.User;
 
 @Model
-public class LoginController {
+public class AuthenticationController {
 	
 	@Inject
 	private UserDao userDao;

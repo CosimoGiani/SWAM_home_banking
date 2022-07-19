@@ -4,6 +4,7 @@
 		<jta-data-source>jakartaDS</jta-data-source>
 		
 		<class>model.User</class>
+		<class>model.BankAccount</class>
 		<class>model.BaseEntity</class>
 		
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>

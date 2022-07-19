@@ -14,7 +14,7 @@ public class User extends BaseEntity {
 	private String password;
 	private String firstname;
 	private String lastname;
-	private String age;
+	private String dateOfBirth;
 	private String address;
 	private String phoneNumber;
 	
@@ -72,12 +72,12 @@ public class User extends BaseEntity {
 		this.lastname = lastname;
 	}
 
-	public String getAge() {
-		return age;
+	public String getDateOfBirth() {
+		return dateOfBirth;
 	}
 
-	public void setAge(String age) {
-		this.age = age;
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 	
 	// This method is used to set an encrypted password when a new user is created

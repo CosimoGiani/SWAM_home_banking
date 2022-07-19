@@ -11,13 +11,13 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 
 import model.User;
-import rest.controller.LoginController;
+import rest.controller.AuthenticationController;
 
 @Path("log")
-public class LoginService {
+public class AuthenticationService {
 	
 	@Inject
-	private LoginController loginController;
+	private AuthenticationController authController;
 	
 	@POST
 	@Path("login")
@@ -26,7 +26,7 @@ public class LoginService {
 	public Response login(String request) throws Exception {
 		Gson gson = new Gson();
 		try {
-			Long response = loginController.login(gson.fromJson(request, User.class));
+			Long response = authController.login(gson.fromJson(request, User.class));
 			Response resp = Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
 			return resp;
 		} catch(Exception e) {
