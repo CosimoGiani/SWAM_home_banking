@@ -5,6 +5,8 @@
 		
 		<class>model.User</class>
 		<class>model.BankAccount</class>
+		<class>model.Card</class>
+		<class>model.Transaction</class>
 		<class>model.BaseEntity</class>
 		
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>

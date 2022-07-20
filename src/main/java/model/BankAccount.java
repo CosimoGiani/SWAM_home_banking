@@ -1,10 +1,12 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -17,9 +19,14 @@ public class BankAccount extends BaseEntity {
 	private String accountNumber;
 	private float balance;
 	private String iban;
-	//private List<String> transactions;	// dovremo poi passare la classe transazioni
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Transaction> transactions;	
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Card> cards;	
+
 	private BankAccountType type;
-	//private List<String> cards;			// anche qui quando si crea la classe carta
 	
 	@Transient
 	private BankAccountDetails details;
@@ -28,6 +35,8 @@ public class BankAccount extends BaseEntity {
 	
 	public BankAccount(String uuid) {
 		super(uuid);
+		this.transactions = new ArrayList<Transaction>();
+		this.cards = new ArrayList<Card>();
 	}
 
 	public String getAccountNumber() {
@@ -62,22 +71,29 @@ public class BankAccount extends BaseEntity {
 		this.type = type;
 		this.details = new BankAccountDetails(type);
 	}
-
-	/*public List<String> getTransactions() {
+	
+	public List<Transaction> getTransactions() {
 		return transactions;
 	}
 
-	public void setTransactions(List<String> transactions) {
+	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
-
-	public List<String> getCards() {
+	
+	public void addTransaction(Transaction transaction) {
+		this.transactions.add(transaction);
+	}
+	
+	public List<Card> getCards() {
 		return cards;
 	}
 
-	public void setCards(List<String> cards) {
+	public void setCards(List<Card> cards) {
 		this.cards = cards;
 	}
-	*/
+	
+	public void addCard(Card card){
+		this.cards.add(card);
+	}
 
 }

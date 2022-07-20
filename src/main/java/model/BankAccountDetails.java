@@ -1,8 +1,5 @@
 package model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import model.enumeration.BankAccountType;
 
 //@Entity
