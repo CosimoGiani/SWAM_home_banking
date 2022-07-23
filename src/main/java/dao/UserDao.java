@@ -27,9 +27,9 @@ public class UserDao implements Serializable {
 	public User login(User userData) {
 		List<User> result = em.createQuery("from User "
 											+ "where email = :email "
-											+ "and password = :pass", User.class)
+											+ "and password = :password", User.class)
 							  .setParameter("email", userData.getEmail())
-							  .setParameter("pass", userData.getPassword())
+							  .setParameter("password", userData.getPassword())
 							  .setMaxResults(1)
 							  .getResultList();
 		if(result.isEmpty()) {
@@ -50,5 +50,16 @@ public class UserDao implements Serializable {
 			return true;
 		}
 	}
-
+	
+	public User getUserFromEmail(String email) {
+		List<User> result = em.createQuery("from User where email = :email ", User.class)
+							.setParameter("email", email)
+							.setMaxResults(1)
+							.getResultList();
+		if(result.isEmpty()) {
+			return null;
+		}
+		return result.get(0);
+		}
+	
 }

@@ -37,8 +37,6 @@ public class LoadMocks {
 	@Inject
 	private TransactionDao transactionDao;
 	
-	//private BankAccountType type = ;
-	
 	@PostConstruct
 	@Transactional
 	public void init(){
@@ -77,9 +75,9 @@ public class LoadMocks {
 		transactionDao.save(t2);
 		transactionDao.save(t3);
 		transactionDao.save(t4);
-
-		System.out.println(".. database initialized! ");
 		
+		System.out.println(".. database initialized! ");
+
 	}
 	
 	private User createUser(String email, String password) {

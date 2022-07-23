@@ -13,14 +13,14 @@ import com.google.gson.Gson;
 import model.User;
 import rest.controller.AuthenticationController;
 
-@Path("log")
+@Path("login")
 public class AuthenticationService {
 	
 	@Inject
 	private AuthenticationController authController;
 	
 	@POST
-	@Path("login")
+	@Path("loginOLD")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces( { "application/json", "text/plain" } )
 	public Response login(String request) throws Exception {
@@ -33,5 +33,32 @@ public class AuthenticationService {
 			return Response.notAcceptable(null).build();
 		}
 	}
+	
+	@POST
+	@Path("credentials")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response authenticateUserWithCredentials(String credentials) throws Exception {
+		Gson gson = new Gson();
+		try {
+			String otp = authController.authenticate(gson.fromJson(credentials, User.class));
+			// DA TOGLIERE L'OTP DENTRO IL RESPONSE, PER TESTARE PER ORA SI TIENE
+			return Response.ok(otp).build();
+		} catch (Exception e) {
+			return Response.notAcceptable(null).entity("Credenziali errate").build();
+		}
+	}
+	/*
+	@POST
+	@Path("otp")
+	//@Consumes(MediaType.APPLICATION_JSON)
+	public Response authenticateUserWithOTP(String otp) {
+		try {
+			SessionOTP bean = session.checkOtp(otp);
+			return Response.ok(bean).build();
+		} catch (Exception e) {
+			return Response.notAcceptable(null).entity("OTP inserito è invalido").build();
+		}
+	}*/
+	
 
 }

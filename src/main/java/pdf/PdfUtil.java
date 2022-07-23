@@ -79,7 +79,7 @@ public class PdfUtil {
 		
 		PdfFormWidget formWidget = (PdfFormWidget)pdf.getForm();
 		List<PdfField> fieldsList = formWidget.getFieldsWidget().getList();
-		
+				
 		String name = ((PdfTextBoxFieldWidget)fieldsList.get(0)).getText();
 		String surname = ((PdfTextBoxFieldWidget)fieldsList.get(1)).getText();
 		
