@@ -53,13 +53,27 @@ public class UserDao implements Serializable {
 	
 	public User getUserFromEmail(String email) {
 		List<User> result = em.createQuery("from User where email = :email ", User.class)
-							.setParameter("email", email)
-							.setMaxResults(1)
-							.getResultList();
+							  .setParameter("email", email)
+							  .setMaxResults(1)
+							  .getResultList();
 		if(result.isEmpty()) {
 			return null;
 		}
 		return result.get(0);
+	}
+	
+	public boolean checkCredentials(String email, String encryptedPassword) {
+		List<User> result = em.createQuery("from User where email = :email and password = :password", User.class)
+							  .setParameter("email", email)
+							  .setParameter("password", encryptedPassword)
+							  .setMaxResults(1)
+							  .getResultList();
+
+		if(result.isEmpty()) {
+			return false;
+		} else {
+			return true;
 		}
+	}
 	
 }

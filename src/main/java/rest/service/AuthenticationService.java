@@ -1,7 +1,11 @@
 package rest.service;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -11,7 +15,9 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 
 import model.User;
+import otp.OTPAuthenticated;
 import rest.controller.AuthenticationController;
+import utils.ParserJson;
 
 @Path("login")
 public class AuthenticationService {
@@ -34,32 +40,41 @@ public class AuthenticationService {
 		}
 	}
 	
-	/*
 	@POST
-	@Path("credentials")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response authenticateUserWithCredentials(String credentials) throws Exception {
-		Gson gson = new Gson();
+	@Path("get-otp")
+	public Response getOtpFromCredentails(String credentials) {
+		// Gson gson = new Gson();
 		try {
-			String otp = authController.authenticate(gson.fromJson(credentials, User.class));
-			// DA TOGLIERE L'OTP DENTRO IL RESPONSE, PER TESTARE PER ORA SI TIENE
-			return Response.ok(otp).build();
+			
+			Map<String, String> credentialsData = ParserJson.fromString(credentials);
+			String email = credentialsData.get("email");
+			String password = credentialsData.get("password");
+
+			if(authController.checkCredentialsInDB(email, password)) {
+				authController.generateOTP(email, password);
+				return Response.ok().entity("OTP generato con successo").build();
+			} else {
+				return Response.notAcceptable(null).entity("Credenziali non valide").build();
+			}
+			
 		} catch (Exception e) {
-			return Response.notAcceptable(null).entity("Credenziali errate").build();
+			e.printStackTrace();
+			return Response.notAcceptable(null).entity("Errore nella generazione dell'OTP").build();
 		}
 	}
 	
-	@POST
-	@Path("otp")
-	//@Consumes(MediaType.APPLICATION_JSON)
-	public Response authenticateUserWithOTP(String otp) {
-		try {
-			SessionOTP bean = session.checkOtp(otp);
-			return Response.ok(bean).build();
-		} catch (Exception e) {
-			return Response.notAcceptable(null).entity("OTP inserito è invalido").build();
-		}
-	}*/
 	
+	@GET
+	@Path("check-otp")
+	@OTPAuthenticated
+	public Response checkAuthenticationOtp(@HeaderParam("email") String email) {
+		try {
+			authController.getUserFromEmail(email);
+			return Response.ok("Utente autenticato con successo").build();
+		} catch (Exception e) {
+			return Response.notAcceptable(null).entity("Utente non autenticato").build();
+		}
+	}
 
 }
