@@ -19,7 +19,7 @@ import java.time.Period;
 
 import com.spire.ms.System.Collections.Generic.List;
 import com.spire.pdf.PdfDocument;
-import com.spire.pdf.fields.PdfField;
+//import com.spire.pdf.fields.PdfField;
 import com.spire.pdf.widget.PdfFormWidget;
 import com.spire.pdf.widget.PdfRadioButtonListFieldWidget;
 import com.spire.pdf.widget.PdfTextBoxFieldWidget;
@@ -78,7 +78,7 @@ public class PdfUtil {
 		pdf.loadFromFile(filePath);
 		
 		PdfFormWidget formWidget = (PdfFormWidget)pdf.getForm();
-		List<PdfField> fieldsList = formWidget.getFieldsWidget().getList();
+		List<?> fieldsList = (List<?>) formWidget.getFieldsWidget().getList();
 				
 		String name = ((PdfTextBoxFieldWidget)fieldsList.get(0)).getText();
 		String surname = ((PdfTextBoxFieldWidget)fieldsList.get(1)).getText();

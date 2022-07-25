@@ -71,6 +71,7 @@ public class RestApplicationConfig extends Application {
 		
 	public void updateMap(User user) {
 		this.userSecretMap.put(user.getEmail(), user.getPassword());
+		System.out.println("La mappa dentro updateMap è: " + this.userSecretMap);
 		this.singletons.add(new OneTimePasswordAuthenticator(this.userSecretMap));
 	}	
 	

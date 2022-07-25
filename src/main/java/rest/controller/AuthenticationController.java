@@ -25,7 +25,7 @@ public class AuthenticationController {
 		} 
 		return loggedUser.getId();
 	}
-	
+	/*
 	public String authenticate(User userToAuthenticate) {
 		User user = userDao.login(userToAuthenticate);
 		if(user == null) {
@@ -48,13 +48,21 @@ public class AuthenticationController {
 		System.out.println("Il codice OTP è: " + otp);
 		System.out.println("ed è stato inviato alla seguente mail: " + email);
 		System.out.println("==============================================================");
-	}
+	}*/
 	
 	public User getUserFromEmail(String email) {
 		User user = userDao.getUserFromEmail(email);
 		if (user == null) {
 			return null;
 		}
+		return user;
+	}
+	
+	public User getUserFromCredentials(User userToAuthenticate) {
+		User user = userDao.login(userToAuthenticate);
+		if (user == null) {
+			throw new Exception();
+		} 
 		return user;
 	}
 	

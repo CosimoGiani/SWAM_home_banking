@@ -16,7 +16,7 @@ import javax.ws.rs.ext.Provider;
 
 @OTPAuthenticated
 @Priority(Priorities.AUTHENTICATION)
-//@Provider
+@Provider
 public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 	
 	protected Map<String, String> userSecretMap;
@@ -25,16 +25,25 @@ public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 	
 	public OneTimePasswordAuthenticator(Map<String, String> userSecretMap) {
 		this.userSecretMap = userSecretMap;
+		// Qui dovrebbe recuperare la entry/riga relativa ad un utente specifico
 		Map.Entry<String,String> entry = userSecretMap.entrySet().iterator().next();
+		//
 		String segreto_otp = OTP.generateToken(entry.getValue());
-		System.out.println("Segreto da mettere in header richiesta: " + segreto_otp);
+		//String segreto_otp = OTP.generateToken(userSecretMap.get(email));
+		System.out.println("==============================================================");
+		System.out.println("Il codice OTP è: " + segreto_otp);
+		System.out.println("ed è stato inviato alla seguente mail: " + entry.getKey());
+		System.out.println("==============================================================");
 	}
 	
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		
+		System.out.println("La mappa è: " + userSecretMap);
+		
 		// Recuperiamo l'autorizzazione della richiesta
 		String authorization = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+		System.out.println("Autorizzazione è: " + authorization);
 		
 	    if (authorization == null) {
 	    	throw new NotAuthorizedException("Autorizzazione nulla");
@@ -44,23 +53,17 @@ public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 	    String[] split = authorization.split(" ");
 	    final String user = split[0];
 	    String otp = split[1];
-	    
-	    // Visto che si passa l'email nella request recupero il corrispondente valore (cioè l'email dell'utente) ...
-        MultivaluedMap<String, String> pathparam = requestContext.getUriInfo().getPathParameters();
-        String userPathParam = pathparam.getFirst("email");
-	    
-	    // ... e controlliamo che l'utente della richesta sia lo stesso dell'autorizzazione
-	    if (!userPathParam.equals(user)) {
-	    	throw new NotAuthorizedException("Utente non autorizzato");
-	    }
+	    System.out.println("Autorizzazione user è: " + user + " e otp è: " + otp);
 	    
 	    // Estraiamo la password dalla mappa ...
 	    String secret = userSecretMap.get(user);
+	    System.out.println("Password nella mappa é: " + secret);
 	    if (secret == null)
 	    	throw new NotAuthorizedException("Password nella mappa inesistente");
 	    
 	    // ... e controlliamo che l'otp generato dalla password della mappa corrisponda all'otp presente nell'autorizzazione
 	    String regen = OTP.generateToken(secret);
+	    System.out.println("Regen è: " + regen);
 	    if (!regen.equals(otp)) {
 	    	throw new NotAuthorizedException("Regen e OTP non coincidenti");
 	    }

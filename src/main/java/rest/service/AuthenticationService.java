@@ -34,6 +34,7 @@ public class AuthenticationService {
 		}
 	}
 	
+	/*
 	@POST
 	@Path("credentials")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -47,7 +48,7 @@ public class AuthenticationService {
 			return Response.notAcceptable(null).entity("Credenziali errate").build();
 		}
 	}
-	/*
+	
 	@POST
 	@Path("otp")
 	//@Consumes(MediaType.APPLICATION_JSON)
