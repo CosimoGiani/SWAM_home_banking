@@ -76,5 +76,7 @@ public class AuthenticationService {
 			return Response.notAcceptable(null).entity("Utente non autenticato").build();
 		}
 	}
+	
+	
 
 }

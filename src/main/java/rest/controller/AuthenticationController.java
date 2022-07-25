@@ -47,8 +47,8 @@ public class AuthenticationController {
 		return userDao.checkCredentials(username, PasswordEncrypter.encrypt(password));
 	}
 	
-	public void generateOTP(String username, String password) {
-		oTPAuthenticator.addUser(username, password);
+	public void generateOTP(String email, String password) {
+		oTPAuthenticator.addUser(email, PasswordEncrypter.encrypt(password));
 	}
 	
 }
