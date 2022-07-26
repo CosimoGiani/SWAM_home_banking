@@ -26,7 +26,7 @@ public class AuthenticationController {
 		} 
 		return loggedUser.getId();
 	}
-	
+	/*
 	public User getUserFromEmail(String email) {
 		User user = userDao.getUserFromEmail(email);
 		if (user == null) {
@@ -42,7 +42,7 @@ public class AuthenticationController {
 		} 
 		return user;
 	}
-	
+	*/
 	public boolean isEmailInDB(String email) {
 		return userDao.isEmailInDB(email);
 	}
