@@ -7,7 +7,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 
+import model.BankAccount;
 import model.User;
 
 //@SuppressWarnings("serial")
@@ -74,6 +76,29 @@ public class UserDao implements Serializable {
 		} else {
 			return true;
 		}
+	}
+	
+	public Long getUserIdFromEmail(String email) {
+		Long user_id = em.createQuery("select id from User where email = :email", Long.class)
+		         .setParameter("email", email)
+		         .getSingleResult();
+
+		if(user_id == null)
+			throw new NotFoundException("No user connected to this email");
+		
+		return user_id;
+	}
+	
+	public List<?> getAssociatedBankAccounts(Long user_id) {
+		
+		List<?> result = em.createQuery("select accountNumber, balance, iban, type from BankAccount where user_id = :user_id")
+									 .setParameter("user_id", user_id)
+									 .getResultList();
+		// System.out.println(result.get(0).getUuid());
+		if(result.isEmpty())
+			throw new NotFoundException("No Bank Accounts are associated to this User");
+		
+		return result;
 	}
 	
 }

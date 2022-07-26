@@ -1,4 +1,4 @@
-package rest.service;
+package rest;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
