@@ -19,7 +19,7 @@ import otp.OTPAuthenticated;
 import rest.controller.AuthenticationController;
 import utils.ParserJson;
 
-@Path("login")
+@Path("auth")
 public class AuthenticationService {
 	
 	@Inject
@@ -42,7 +42,7 @@ public class AuthenticationService {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("get-otp")
+	@Path("login/get-otp")
 	public Response getOtpFromCredentails(String credentials) {
 		// Gson gson = new Gson();
 		try {
@@ -66,17 +66,34 @@ public class AuthenticationService {
 	
 	
 	@GET
-	@Path("check-otp")
+	@Path("login/check-otp")
 	@OTPAuthenticated
-	public Response checkAuthenticationOtp(@HeaderParam("email") String email) {
+	public Response checkAuthenticationOtp(@HeaderParam("Authorization") String authorization) {
 		try {
-			authController.getUserFromEmail(email);
-			return Response.ok("Utente autenticato con successo").build();
+			String[] split = authorization.split(" ");
+		    final String email = split[0];
+			if(authController.isEmailInDB(email))
+				return Response.ok("Utente autenticato con successo").build();
+			else
+				// entriamo qua solo se il filter OTPAuthenticated non funziona oppure c'è stata una cancellazione sul DB
+				return Response.status(500).entity("Internal Error").build(); 
 		} catch (Exception e) {
 			return Response.notAcceptable(null).entity("Utente non autenticato").build();
 		}
 	}
 	
-	
+	@GET
+	@Path("logout")
+	@OTPAuthenticated
+	public Response removeOtp(@HeaderParam("Authorization") String authorization) {
+		try {
+			String[] split = authorization.split(" ");
+		    final String email = split[0];
+			authController.removeOTP(email);
+			return Response.ok("Logout eseguito con successo").build();
+		} catch (Exception e) {
+			return Response.notAcceptable(null).entity("Session Error").build();
+		}
+	}
 
 }

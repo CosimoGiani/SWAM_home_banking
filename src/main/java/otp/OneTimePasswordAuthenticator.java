@@ -3,7 +3,6 @@ package otp;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
@@ -24,7 +23,7 @@ import model.User;
 @ApplicationScoped
 public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 	
-	private Map<String, String> userSecretMap;
+	private HashMap<String, String> userSecretMap;
 	
 	public OneTimePasswordAuthenticator() {
 		userSecretMap = new HashMap<String, String>();
@@ -42,6 +41,7 @@ public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 	
 	public void removeUser(String email) {
 		this.userSecretMap.remove(email);
+		System.out.println("La mappa è: " + userSecretMap);
 	}
 	
 	public void removeUser(User user) {
@@ -55,7 +55,7 @@ public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 		
 		// Recuperiamo l'autorizzazione della richiesta
 		String authorization = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-		System.out.println("Autorizzazione è: " + authorization);
+		// System.out.println("Autorizzazione è: " + authorization);
 		
 	    if (authorization == null) {
 	    	throw new NotAuthorizedException("Autorizzazione nulla");
@@ -65,17 +65,15 @@ public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 	    String[] split = authorization.split(" ");
 	    final String email = split[0];
 	    String otp = split[1];
-	    System.out.println("Autorizzazione user è: " + email + " e otp è: " + otp);
+	    // System.out.println("Autorizzazione user è: " + email + " e otp è: " + otp);
 	    
 	    // Estraiamo la password dalla mappa ...
 	    String secret = userSecretMap.get(email);
-	    System.out.println("Password nella mappa é: " + secret);
 	    if (secret == null)
 	    	throw new NotAuthorizedException("Password nella mappa inesistente");
 	    
 	    // ... e controlliamo che l'otp generato dalla password della mappa corrisponda all'otp presente nell'autorizzazione
 	    String regen = OTP.generateToken(secret);
-	    System.out.println("Regen è: " + regen);
 	    if (!regen.equals(otp)) {
 	    	throw new NotAuthorizedException("Regen e OTP non coincidenti");
 	    }
