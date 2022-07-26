@@ -14,7 +14,7 @@ public class UserController {
 	@Inject
 	private UserDao userDao;
 	
-	public List<?> getAssociatedBankAccounts(String email) {
+	public List<BankAccount> getAssociatedBankAccounts(String email) {
 		Long user_id = userDao.getUserIdFromEmail(email);
 		return userDao.getAssociatedBankAccounts(user_id);
 	}

@@ -20,15 +20,16 @@ public class UserService {
 	
 	@Inject 
 	private UserController userController;
-
+	
 	@GET
-	@Path("conti")
+	@Path("accounts")
 	@OTPAuthenticated
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<?> getBankAccounts(@HeaderParam("Authorization") String authorization) {
+	public List<BankAccount> getBankAccounts(@HeaderParam("Authorization") String authorization) {
 		String[] split = authorization.split(" ");
 	    final String email = split[0];
 	    
 	    return userController.getAssociatedBankAccounts(email);
 	}
+
 }

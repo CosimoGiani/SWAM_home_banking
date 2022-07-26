@@ -89,9 +89,9 @@ public class UserDao implements Serializable {
 		return user_id;
 	}
 	
-	public List<?> getAssociatedBankAccounts(Long user_id) {
+	public List<BankAccount> getAssociatedBankAccounts(Long user_id) {
 		
-		List<?> result = em.createQuery("select accountNumber, balance, iban, type from BankAccount where user_id = :user_id")
+		List<BankAccount> result = em.createQuery("from BankAccount where user_id = :user_id", BankAccount.class)
 									 .setParameter("user_id", user_id)
 									 .getResultList();
 		// System.out.println(result.get(0).getUuid());

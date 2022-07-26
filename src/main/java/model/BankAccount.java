@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -80,6 +81,7 @@ public class BankAccount extends BaseEntity {
 		this.details = new BankAccountDetails(type);
 	}
 	
+	@JsonbTransient
 	public List<Transaction> getTransactions() {
 		return transactions;
 	}
@@ -92,10 +94,11 @@ public class BankAccount extends BaseEntity {
 		this.transactions.add(transaction);
 	}
 	
+	@JsonbTransient
 	public List<Card> getCards() {
 		return cards;
 	}
-
+	
 	public void setCards(List<Card> cards) {
 		this.cards = cards;
 	}
