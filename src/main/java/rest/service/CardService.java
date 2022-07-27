@@ -1,6 +1,5 @@
 package rest.service;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -11,7 +10,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import model.Transaction;
 import otp.OTPAuthenticated;
 import rest.controller.CardController;
 import utils.ParserJson;
