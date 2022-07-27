@@ -11,6 +11,7 @@ import javax.ws.rs.NotFoundException;
 
 import model.Consultant;
 import model.User;
+import model.enumeration.BankAccountType;
 
 @RequestScoped
 public class ConsultantDao implements Serializable {
@@ -42,11 +43,6 @@ public class ConsultantDao implements Serializable {
 		Long id = em.createQuery("select id from Consultant where identificationNumber = :identificationNumber", Long.class)
 		         .setParameter("identificationNumber", identificationNumber)
 		         .getSingleResult();
-		System.out.println("ID trovato è: " + id);
-		/*if(id == null) {
-			System.out.println("Nessun consulente corrisponde a questa matricola");
-			throw new NotFoundException("Nessun consulente corrisponde a questa matricola");
-		}*/
 		return id;
 	}
 	
@@ -54,11 +50,22 @@ public class ConsultantDao implements Serializable {
 		List<User> result = em.createQuery("from User where consultant_id = :consultant_id", User.class)
 				 			  .setParameter("consultant_id", consultant_id)
 				 			  .getResultList();
-		/*if(result.isEmpty()) {
-			System.out.println("Non ci sono correntisti associati a questo consulente");
-			throw new NotFoundException("Non ci sono correntisti associati a questo consulente");
-		}*/
 		return result;
+	}
+	
+	public User getUserFromId(Long id) {
+		User user = em.createQuery("from User where id = :id", User.class)
+					  .setParameter("id", id)
+					  .getSingleResult();
+		return user;
+	}
+	
+	@Transactional
+	public void modifyAccountType(BankAccountType type, Long id) {
+		em.createQuery("update BankAccount set type = :type where id = :id")
+		  .setParameter("type", type)
+		  .setParameter("id", id)
+		  .executeUpdate();
 	}
 
 }
