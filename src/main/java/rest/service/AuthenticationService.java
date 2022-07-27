@@ -44,9 +44,7 @@ public class AuthenticationService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("login/get-otp")
 	public Response getOtpFromCredentails(String credentials) {
-		// Gson gson = new Gson();
 		try {
-			
 			Map<String, String> credentialsData = ParserJson.fromString(credentials);
 			String email = credentialsData.get("email");
 			String password = credentialsData.get("password");
@@ -57,7 +55,6 @@ public class AuthenticationService {
 			} else {
 				return Response.notAcceptable(null).entity("Credenziali non valide").build();
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.notAcceptable(null).entity("Errore nella generazione dell'OTP").build();
@@ -94,6 +91,33 @@ public class AuthenticationService {
 		} catch (Exception e) {
 			return Response.notAcceptable(null).entity("Session Error").build();
 		}
+	}
+	
+	@POST
+	@Path("login/consultant")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response loginConsultant(String credentials) throws Exception {
+		try {
+			Map<String, String> credentialsData = ParserJson.fromString(credentials);
+			String identificationNumber = credentialsData.get("identificationNumber");
+			String password = credentialsData.get("password");
+			
+			if (authController.checkCredentialsConsultantInDB(identificationNumber, password)) {
+				return Response.ok().entity("Consulente loggato con successo").build();
+			} else {
+				return Response.notAcceptable(null).entity("Credenziali non valide").build();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.notAcceptable(null).entity("Credenziali non valide").build();
+		}
+	}
+	
+	@GET
+	@Path("logout")
+	//@Consumes(MediaType.APPLICATION_JSON)
+	public Response logoutConsultant() {
+		return Response.ok().entity("Consulente ha effettuato il logout").build();
 	}
 
 }

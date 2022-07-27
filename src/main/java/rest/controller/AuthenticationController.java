@@ -3,6 +3,7 @@ package rest.controller;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
+import dao.ConsultantDao;
 import dao.UserDao;
 import model.User;
 import otp.OneTimePasswordAuthenticator;
@@ -17,6 +18,9 @@ public class AuthenticationController {
 	@Inject
 	private OneTimePasswordAuthenticator oTPAuthenticator;
 	
+	@Inject
+	private ConsultantDao consultantDao;
+	
 	public Long login(User loggingUser) { // OLD login
 		User loggedUser = userDao.login(loggingUser);
 		if( loggedUser == null ) {
@@ -24,23 +28,7 @@ public class AuthenticationController {
 		} 
 		return loggedUser.getId();
 	}
-	/*
-	public User getUserFromEmail(String email) {
-		User user = userDao.getUserFromEmail(email);
-		if (user == null) {
-			return null;
-		}
-		return user;
-	}
-	
-	public User getUserFromCredentials(User userToAuthenticate) {
-		User user = userDao.login(userToAuthenticate);
-		if (user == null) {
-			throw new Exception();
-		} 
-		return user;
-	}
-	*/
+
 	public boolean isEmailInDB(String email) {
 		return userDao.isEmailInDB(email);
 	}
@@ -56,6 +44,10 @@ public class AuthenticationController {
 	public void removeOTP(String email) {
 		System.out.println(email);
 		oTPAuthenticator.removeUser(email);
+	}
+	
+	public boolean checkCredentialsConsultantInDB(String identificationNumber, String password) {
+		return consultantDao.checkCredentials(identificationNumber, PasswordEncrypter.encrypt(password));
 	}
 	
 }

@@ -11,10 +11,12 @@ import javax.transaction.Transactional;
 
 import dao.BankAccountDao;
 import dao.CardDao;
+import dao.ConsultantDao;
 import dao.TransactionDao;
 import dao.UserDao;
 import model.BankAccount;
 import model.Card;
+import model.Consultant;
 import model.Transaction;
 import model.User;
 import model.enumeration.BankAccountType;
@@ -37,13 +39,19 @@ public class LoadMocks {
 	@Inject
 	private TransactionDao transactionDao;
 	
+	@Inject
+	private ConsultantDao consultantDao;
+	
 	@PostConstruct
 	@Transactional
 	public void init(){
 		
 		System.out.println("initializing database.. ");
-		User user1 = createUser("user1@example.com", "pass1");
-		User user2 = createUser("user2@example.com", "pass2");
+		
+		Consultant c1 = createConsultant("123456", "password");
+		
+		User user1 = createUser("user1@example.com", "pass1", c1);
+		User user2 = createUser("user2@example.com", "pass2", c1);
 		
 		BankAccount account1 = createBankAccount(user1);
 		BankAccount account2 = createBankAccount(user1);
@@ -59,6 +67,8 @@ public class LoadMocks {
 		Transaction t3 = createTransaction(account2, (float) 300, TransactionType.VERSAMENTO, LocalDate.now().minusMonths(1), "ATM 1");
 		Transaction t4 = createTransaction(account2, (float) 70, TransactionType.BONIFICO, LocalDate.now().minusDays(15), "Home-Banking App");
 		Transaction t5 = createTransaction(account3, (float) 120, TransactionType.VERSAMENTO, LocalDate.now().minusDays(15), "Home-Banking App");
+		
+		consultantDao.save(c1);
 		
 		userDao.save(user1);
 		userDao.save(user2);
@@ -82,10 +92,12 @@ public class LoadMocks {
 
 	}
 	
-	private User createUser(String email, String password) {
+	private User createUser(String email, String password, Consultant c) {
 		User user = new User(UUID.randomUUID().toString());
 		user.setEmail(email);
 		user.setEncryptedPassword(password);
+		c.addUser(user);
+		user.setConsultant(c);
 		return user;
 	}
 	
@@ -115,12 +127,19 @@ public class LoadMocks {
 		t.setTransactionType(transactionType);
 		t.setDate(date);
 		t.setLocation(location);
-		if(transactionType ==  TransactionType.VERSAMENTO) {
+		if(transactionType == TransactionType.VERSAMENTO) {
 			account.setBalance(account.getBalance() + amount);
 		} else {
 			account.setBalance(account.getBalance() - amount);
 		}
 		return t;
+	}
+	
+	private Consultant createConsultant(String identificationNumber, String password) {
+		Consultant consultant = new Consultant(UUID.randomUUID().toString());
+		consultant.setIdentificationNumber(identificationNumber);
+		consultant.setEncryptedPassword(password);
+		return consultant;
 	}
 
 }

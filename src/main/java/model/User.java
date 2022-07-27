@@ -9,6 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -35,6 +36,9 @@ public class User extends BaseEntity {
 	@JoinColumn(name="user_id", referencedColumnName = "id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<BankAccount> bankAccounts;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Consultant consultant;
 	
 	User() {}
 	
@@ -132,6 +136,15 @@ public class User extends BaseEntity {
 	
 	public void addBankAccountToList(BankAccount bankAccount) {
 		this.bankAccounts.add(bankAccount);
+	}
+	
+	@JsonbTransient
+	public Consultant getConsultant() {
+		return consultant;
+	}
+
+	public void setConsultant(Consultant consultant) {
+		this.consultant = consultant;
 	}
 
 }
