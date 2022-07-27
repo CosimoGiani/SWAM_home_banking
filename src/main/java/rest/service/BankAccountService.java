@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import model.Card;
 import model.Transaction;
 import otp.OTPAuthenticated;
 import rest.controller.BankAccountController;
@@ -37,6 +38,29 @@ public class BankAccountService {
 			Long idValue = Long.parseLong(idData.get("id"));
 			if (controller.userOwnsBankAccount(email, idValue)) {
 				List<Transaction> transactions = controller.getBankAccountTransactions(idValue);
+				return transactions;
+			}
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("cards")
+	@OTPAuthenticated
+	public List<Card> getBankAccountCards(@HeaderParam("Authorization") String authorization, String id) {
+		String[] split = authorization.split(" ");
+	    final String email = split[0];
+		try {
+			Map<String, String> idData = ParserJson.fromString(id);
+			Long idValue = Long.parseLong(idData.get("id"));
+			if (controller.userOwnsBankAccount(email, idValue)) {
+				List<Card> transactions = controller.getBankAccountCards(idValue);
 				return transactions;
 			}
 			return null;

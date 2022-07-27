@@ -3,8 +3,6 @@ package rest.controller;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
-import com.spire.ms.System.Exception;
-
 import dao.UserDao;
 import model.User;
 import otp.OneTimePasswordAuthenticator;

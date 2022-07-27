@@ -7,6 +7,8 @@ import javax.inject.Inject;
 
 import dao.BankAccountDao;
 import dao.UserDao;
+import model.BankAccount;
+import model.Card;
 import model.Transaction;
 
 @Model
@@ -26,6 +28,14 @@ public class BankAccountController {
 		return transactions;
 	}
 	
+	public List<Card> getBankAccountCards(Long id) throws Exception {
+		List<Card> cards = bankAccountDao.getBankAccountCards(id);
+		if (cards.isEmpty()) {
+			throw new Exception();
+		}
+		return cards;
+	}
+	
 	public void deleteBankAccount(Long id) throws Exception {
 		boolean exists = bankAccountDao.isBankAccountInDB(id);
 		if (exists) {
@@ -37,9 +47,12 @@ public class BankAccountController {
 	
 	public boolean userOwnsBankAccount(String email, Long id) {
 		Long userId = userDao.getUserIdFromEmail(email);
-		List<?> list = userDao.getAssociatedBankAccounts(userId);
-		//System.out.println("Il tipo è: " + list.get(0).getClass());
-		return true;
+		List<BankAccount> bankAccounts = userDao.getAssociatedBankAccounts(userId);
+		for(BankAccount b : bankAccounts) {
+			if(b.getId() == id)
+				return true;
+		}
+		return false;
 	}
 
 }

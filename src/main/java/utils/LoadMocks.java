@@ -58,7 +58,7 @@ public class LoadMocks {
 		Transaction t2 = createTransaction(account1, (float) 300, TransactionType.PAGAMENTO, LocalDate.now().minusMonths(1), "Coop");
 		Transaction t3 = createTransaction(account2, (float) 300, TransactionType.VERSAMENTO, LocalDate.now().minusMonths(1), "ATM 1");
 		Transaction t4 = createTransaction(account2, (float) 70, TransactionType.BONIFICO, LocalDate.now().minusDays(15), "Home-Banking App");
-		Transaction t5 = createTransaction(account3, (float) 70, TransactionType.VERSAMENTO, LocalDate.now().minusDays(15), "Home-Banking App");
+		Transaction t5 = createTransaction(account3, (float) 120, TransactionType.VERSAMENTO, LocalDate.now().minusDays(15), "Home-Banking App");
 		
 		userDao.save(user1);
 		userDao.save(user2);
@@ -104,6 +104,7 @@ public class LoadMocks {
 		card.setExpirationDate(LocalDate.now().plusYears(2));
 		card.setMassimale(massimale);
 		card.setCardType(cardType);
+		card.setActive(true);
 		return card;
 	}
 	

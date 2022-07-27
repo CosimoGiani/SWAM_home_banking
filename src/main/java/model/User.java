@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -120,6 +121,7 @@ public class User extends BaseEntity {
 		setPassword(encryptedPassword);
 	}
 	
+	@JsonbTransient
 	public List<BankAccount> getBankAccounts() {
 		return bankAccounts;
 	}

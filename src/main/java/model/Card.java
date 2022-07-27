@@ -15,7 +15,8 @@ public class Card extends BaseEntity {
 	private LocalDate expirationDate;
 	private float massimale;
 	private CardType cardType;
-	
+	private boolean isActive;
+
 	Card() {}
 	
 	public Card(String uuid) {
@@ -59,6 +60,16 @@ public class Card extends BaseEntity {
 
 	public void setCardType(CardType cardType) {
 		this.cardType = cardType;
+		
+	}
+	
+	public boolean isActive() {
+		return isActive;
+		
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 		
 	}
 }

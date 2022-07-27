@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import model.BankAccount;
+import model.Card;
 import model.Transaction;
 
 @RequestScoped
@@ -26,6 +27,13 @@ public class BankAccountDao implements Serializable {
 	
 	public List<Transaction> getBankAccountTransactions(Long id) {
 		List<Transaction> result = em.createQuery("from Transaction where account_id = :id", Transaction.class)
+									 .setParameter("id", id)
+									 .getResultList();
+		return result;
+	}
+	
+	public List<Card> getBankAccountCards(Long id) {
+		List<Card> result = em.createQuery("from Card where account_id = :id", Card.class)
 									 .setParameter("id", id)
 									 .getResultList();
 		return result;
