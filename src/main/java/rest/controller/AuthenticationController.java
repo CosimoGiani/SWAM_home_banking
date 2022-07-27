@@ -6,7 +6,8 @@ import javax.inject.Inject;
 import dao.ConsultantDao;
 import dao.UserDao;
 import model.User;
-import otp.OneTimePasswordAuthenticator;
+import otpStateful.OneTimePasswordAuthenticator;
+// import otp.OneTimePasswordAuthenticator;
 import utils.PasswordEncrypter;
 
 @Model
@@ -38,12 +39,14 @@ public class AuthenticationController {
 	}
 	
 	public void generateOTP(String email, String password) {
-		oTPAuthenticator.addUser(email, PasswordEncrypter.encrypt(password));
+		//oTPAuthenticator.addUser(email, PasswordEncrypter.encrypt(password));
+		oTPAuthenticator.generateOTP(email);
 	}
 	
 	public void removeOTP(String email) {
 		System.out.println(email);
-		oTPAuthenticator.removeUser(email);
+		//oTPAuthenticator.removeUser(email);
+		oTPAuthenticator.removeOTP(email);
 	}
 	
 	public boolean checkCredentialsConsultantInDB(String identificationNumber, String password) {

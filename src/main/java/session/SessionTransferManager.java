@@ -5,9 +5,15 @@ import java.util.Random;
 import java.util.Timer;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import otpStateful.OneTimePasswordAuthenticator;
 
 @ApplicationScoped
 public class SessionTransferManager {
+	
+	@Inject
+	private OneTimePasswordAuthenticator oTPAuthenticator;
 	
 	private HashMap<String, HashMap<String, String>> sessionCodeHolder;
 	private Random rand;
@@ -46,6 +52,9 @@ public class SessionTransferManager {
 	public HashMap<String, String> getSessionCredentials(String sessionCode){
 		HashMap<String, String> sessionCredentials = sessionCodeHolder.get(sessionCode);
 		if(sessionCredentials != null) {
+			String newOtp = oTPAuthenticator.regenerateOTP(sessionCredentials.get("email"));
+			sessionCredentials.put("otp", newOtp);
+			
 			sessionCodeHolder.remove(sessionCode);
 			System.out.println("Codice Sessione utilizzato con successo");
 		}
@@ -53,7 +62,7 @@ public class SessionTransferManager {
 	}
 	
 	private String generateSessionCode() {
-		int randomCode = rand.nextInt(10000000, 99999999); 
+		int randomCode = rand.nextInt(89999999) + 10000000; 
 		return String.valueOf(randomCode);
 	}
 }

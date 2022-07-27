@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 
 import model.User;
-import otp.OTPAuthenticated;
+import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.AuthenticationController;
 import utils.ParserJson;
 
@@ -64,7 +64,8 @@ public class AuthenticationService {
 	
 	@GET
 	@Path("login/check-otp")
-	@OTPAuthenticated
+	// @OTPAuthenticated
+	@OTPAuthenticatedStateful
 	public Response checkAuthenticationOtp(@HeaderParam("Authorization") String authorization) {
 		try {
 			String[] split = authorization.split(" ");
@@ -81,7 +82,7 @@ public class AuthenticationService {
 	
 	@GET
 	@Path("logout")
-	@OTPAuthenticated
+	@OTPAuthenticatedStateful
 	public Response removeOtp(@HeaderParam("Authorization") String authorization) {
 		try {
 			String[] split = authorization.split(" ");

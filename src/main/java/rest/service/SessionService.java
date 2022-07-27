@@ -3,7 +3,6 @@ package rest.service;
 import java.util.HashMap;
 
 import javax.inject.Inject;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -11,7 +10,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import otp.OTPAuthenticated;
+// import otp.OTPAuthenticated;
+import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.SessionController;
 
 @Path("session")
@@ -22,7 +22,7 @@ public class SessionService {
 	
 	@GET
 	@Path("request-transfer")
-	@OTPAuthenticated
+	@OTPAuthenticatedStateful
 	@Produces(MediaType.APPLICATION_JSON)
 	public String requestSessionTransfer(@HeaderParam("Authorization") String authorization) {
 		String[] split = authorization.split(" ");
