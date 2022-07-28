@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
 import dao.ConsultantDao;
 import dao.UserDao;
@@ -35,6 +36,29 @@ public class UserController {
 	public Consultant getConsultantAssociated(String userEmail) {
 		Long consultant_id = userDao.getConsultantIdFromEmail(userEmail);
 		return consultantDao.getConsultantLazy(consultant_id, true);
+	}
+	
+	public Response sendMessageToConsultant(String userEmail, String object, String corpus) {
+		User user = userDao.getUserFromEmail(userEmail);
+		String nameSender = user.getFirstname() + " " + user.getLastname();
+		
+		Long consultant_id = userDao.getConsultantIdFromEmail(userEmail);
+		Consultant consultant = consultantDao.getConsultantLazy(consultant_id, true);
+		
+		String consultantEmail = consultant.getEmail();
+		String nameReciever = consultant.getFirstname() + " " + consultant.getLastname();
+		
+		sendEmail(userEmail, consultantEmail, nameSender, nameReciever, object, corpus);
+		
+		return Response.ok("Messaggio inviato correttamente").build();
+	}
+	
+	private void sendEmail(String fromEmail, String toEmail, String nameSender, String nameReciever, String object, String corpus) {
+		System.out.println("==========================================");
+		System.out.println("MESSAGGIO da " + nameSender + " (" + fromEmail + ") per " + nameReciever + " (" + toEmail + ")" );
+		System.out.println("OGGETTO: " + object);
+		System.out.println(corpus);
+		System.out.println("==========================================");
 	}
 
 }
