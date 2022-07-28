@@ -89,6 +89,17 @@ public class UserDao implements Serializable {
 		return user_id;
 	}
 	
+	public Long getConsultantIdFromEmail(String email) {
+		Long consultant_id = em.createQuery("select distinct c.id from User u left join u.consultant c where u.email = :email", Long.class)
+		         .setParameter("email", email)
+		         .getSingleResult();
+
+		if(consultant_id == null)
+			throw new NotFoundException("No consultant is associated to this user");
+		
+		return consultant_id;
+	}
+	
 	public List<BankAccount> getAssociatedBankAccounts(Long user_id) {
 		
 		List<BankAccount> result = em.createQuery("from BankAccount where user_id = :user_id", BankAccount.class)

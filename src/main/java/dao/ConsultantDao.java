@@ -86,5 +86,15 @@ public class ConsultantDao implements Serializable {
 								  .getSingleResult();
 		return consultant;
 	}
+	
+	public Consultant getConsultantLazy(Long consultant_id, boolean obscureSensible) {
+		Consultant consultant = em.createQuery("from Consultant c where c.id = :consultant_id", Consultant.class)
+				  .setParameter("consultant_id", consultant_id)
+				  .getSingleResult();
+		if(obscureSensible) {
+			consultant.setPassword(null);
+		}
+		return consultant;
+	}
 
 }

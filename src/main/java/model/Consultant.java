@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -80,6 +81,7 @@ public class Consultant extends BaseEntity {
 		this.identificationNumber = identificationNumber;
 	}
 	
+	@JsonbTransient
 	public List<User> getUsers() {
 		return users;
 	}

@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
 import model.BankAccount;
+import model.Consultant;
 import model.User;
 
 import javax.ws.rs.Produces;
@@ -46,6 +47,22 @@ public class UserService {
 	    
 	    return userController.getUserFromEmail(email, true);
 	}
+	
+	
+	@GET
+	@Path("consultant-data")
+	@OTPAuthenticatedStateful
+	@Produces(MediaType.APPLICATION_JSON)
+	public Consultant getConsultantData(@HeaderParam("Authorization") String authorization) {
+		/* Get info del Consultant */
+		
+		String[] split = authorization.split(" ");
+	    final String email = split[0];
+	
+	    return userController.getConsultantAssociated(email);
+	}
+	
+	// Richiesta Consulenza (come una sorta di messaggio, che poi in realtà sarà una email)
 	
 
 }
