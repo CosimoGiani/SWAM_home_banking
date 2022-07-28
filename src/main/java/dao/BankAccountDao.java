@@ -64,7 +64,7 @@ public class BankAccountDao implements Serializable {
 	}
 	
 	public BankAccount getAccountById(Long id) {
-		BankAccount account = em.createQuery("select distinct b from BankAccount b join fetch b.cards where b.id = :id", BankAccount.class)
+		BankAccount account = em.createQuery("select distinct b from BankAccount b left join fetch b.cards where b.id = :id", BankAccount.class)
 								.setParameter("id", id)
 								.getSingleResult();
 		return account;

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
@@ -14,8 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import model.BankAccount;
-import model.Card;
-import model.Consultant;
 import model.Transaction;
 import model.User;
 import model.enumeration.BankAccountType;
@@ -186,6 +185,55 @@ public class ConsultantService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.notAcceptable(null).entity("Carta non aggiunta").build();
+		}
+	}
+	
+	@DELETE
+	@Path("user/cards/remove-card")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response removeUserCard(String request) {
+		try {
+			Map<String, String> data = ParserJson.fromString(request);
+			Long consultantId = controller.getConsultantIdFromIdNumber(data.get("identificationNumber"));
+			Long userId = Long.parseLong(data.get("userId"));
+			Long accountId = Long.parseLong(data.get("accountId"));
+			Long cardId = Long.parseLong(data.get("cardId"));
+			if (controller.checkUserIsAssociated(consultantId, userId)) {
+				if (controller.getBankAccountOwnedByUser(accountId, userId) != null) {
+					controller.removeCard(cardId);
+					return Response.ok().entity("Carta rimossa con successo").build();
+				} else return Response.notAcceptable(null).entity("Carta non rimossa").build();
+			} else return Response.notAcceptable(null).entity("Carta non rimossa").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.notAcceptable(null).entity("Carta non rimossa").build();
+		}
+	}
+	
+	@PATCH
+	@Path("user/cards/update-card-massimale")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateMassimaleUserCard(String request) {
+		try {
+			Map<String, String> data = ParserJson.fromString(request);
+			Long consultantId = controller.getConsultantIdFromIdNumber(data.get("identificationNumber"));
+			Long userId = Long.parseLong(data.get("userId"));
+			Long accountId = Long.parseLong(data.get("accountId"));
+			Long cardId = Long.parseLong(data.get("cardId"));
+			Float massimale = Float.parseFloat(data.get("massimale"));
+			if (controller.checkUserIsAssociated(consultantId, userId)) {
+				if (controller.getBankAccountOwnedByUser(accountId, userId) != null) {
+					controller.updateMassimale(cardId, massimale);
+					return Response.ok().entity("Il massimale della carta è stato cambiato con successo").build();
+				} else {
+					return Response.notAcceptable(null).entity("Non è stato possibile cambiare il massimale").build();
+				}
+			} else {
+				return Response.notAcceptable(null).entity("Non è stato possibile cambiare il massimale").build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.notAcceptable(null).entity("Non è stato possibile cambiare il massimale").build();
 		}
 	}
 

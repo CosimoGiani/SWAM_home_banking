@@ -13,7 +13,6 @@ import dao.ConsultantDao;
 import dao.UserDao;
 import model.BankAccount;
 import model.Card;
-import model.Consultant;
 import model.Transaction;
 import model.User;
 import model.enumeration.BankAccountType;
@@ -119,6 +118,14 @@ public class ConsultantController {
 		card.setActive(true);
 		cardDao.save(card);
 		accountDao.update(account);
+	}
+	
+	public void removeCard(Long cardId) {
+		cardDao.removeCard(cardId);
+	}
+	
+	public void updateMassimale(Long cardId, float massimale) {
+		cardDao.updateMassimale(cardId, massimale);
 	}
 
 }

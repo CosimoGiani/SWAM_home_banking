@@ -21,7 +21,6 @@ public class CardDao implements Serializable {
 	
 	@Transactional
 	public void save(Card card) {
-		// em.getTransaction().begin();
 		em.persist(card);
 	}
 	
@@ -37,5 +36,18 @@ public class CardDao implements Serializable {
 			return false;
 		else
 			throw new QueryException("Something is wrong in the Query");
+	}
+	
+	@Transactional
+	public void removeCard(Long id) {
+		em.createQuery("delete from Card where id = :id").setParameter("id", id).executeUpdate();
+	}
+	
+	@Transactional
+	public void updateMassimale(Long id, float massimale) {
+		em.createQuery("update Card set massimale = :massimale where id = :id")
+		  .setParameter("massimale", massimale)
+		  .setParameter("id", id)
+		  .executeUpdate();
 	}
 }
