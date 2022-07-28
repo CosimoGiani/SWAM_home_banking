@@ -49,6 +49,7 @@ public class LoadMocks {
 		System.out.println("initializing database.. ");
 		
 		Consultant c1 = createConsultant("123456", "password");
+		Consultant c2 = createConsultant("000111", "password");
 		
 		User user1 = createUser("user1@example.com", "pass1", c1);
 		User user2 = createUser("user2@example.com", "pass2", c1);
@@ -69,6 +70,7 @@ public class LoadMocks {
 		Transaction t5 = createTransaction(account3, (float) 120, TransactionType.VERSAMENTO, LocalDate.now().minusDays(15), "Home-Banking App");
 		
 		consultantDao.save(c1);
+		consultantDao.save(c2);
 		
 		userDao.save(user1);
 		userDao.save(user2);

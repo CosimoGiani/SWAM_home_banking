@@ -7,7 +7,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import javax.ws.rs.NotFoundException;
+
+import org.hibernate.Session;
 
 import model.Consultant;
 import model.User;
@@ -24,6 +25,11 @@ public class ConsultantDao implements Serializable {
 	@Transactional
 	public void save(Consultant consultant) {
 		em.persist(consultant);
+	}
+	
+	@Transactional
+	public void update(Consultant consultant) {
+		em.unwrap(Session.class).update(consultant);
 	}
 	
 	public boolean checkCredentials(String identificationNumber, String encryptedPassword) {
@@ -66,6 +72,19 @@ public class ConsultantDao implements Serializable {
 		  .setParameter("type", type)
 		  .setParameter("id", id)
 		  .executeUpdate();
+	}
+	
+	public List<Long> getAllConsultantsIds(){
+		List<Long> result = em.createQuery("select id from Consultant", Long.class)
+									.getResultList();
+		return result;
+	}
+	
+	public Consultant getConsultantEager(Long consultant_id) {
+		Consultant consultant = em.createQuery("select distinct c from Consultant c left join fetch c.users where c.id = :consultant_id", Consultant.class)
+								  .setParameter("consultant_id", consultant_id)
+								  .getSingleResult();
+		return consultant;
 	}
 
 }

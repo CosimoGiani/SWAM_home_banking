@@ -37,20 +37,6 @@ public class RegistrationService {
 		return response.build();
 	}
 	
-	/*
-	@POST
-	@Path("send")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response register(
-			@FormDataParam("File") InputStream uploadedInputStream,
-			// @FormDataParam("File") FormDataContentDisposition tmp,
-			@FormDataParam("email") String email,
-			@FormDataParam("password") String password) {
-		
-		return registrationController.createAccount(uploadedInputStream, email, password);
-	}
-	*/
-	
 	@POST
 	@Path("send")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

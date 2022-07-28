@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -13,8 +14,10 @@ import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 
 import dao.BankAccountDao;
+import dao.ConsultantDao;
 import dao.UserDao;
 import model.BankAccount;
+import model.Consultant;
 import model.User;
 import model.enumeration.BankAccountType;
 import pdf.PdfUtil;
@@ -28,6 +31,8 @@ public class RegistrationController {
 	private PdfUtil pdfUtil;
 	@Inject
 	private BankAccountDao accountDao;
+	@Inject
+	private ConsultantDao consultantDao;
 	
 	public File getPdf() {
 		return pdfUtil.getPdf();
@@ -51,8 +56,15 @@ public class RegistrationController {
 			User newUser = createUser(email, password, extractedData);
 			BankAccount newAccount = createBankAccount(newUser, (String) extractedData.get("selectedBankAccount"));
 			
+			Long consultant_selected_id = getConsultantWithFewerUsers();
+			Consultant selectedConsultant = consultantDao.getConsultantEager(consultant_selected_id);
+			
+			newUser.setConsultant(selectedConsultant);
+			selectedConsultant.addUser(newUser);
+			
 			userDao.save(newUser);
 			accountDao.save(newAccount);
+			consultantDao.update(selectedConsultant);
 			
 			System.out.println("Account created successfully!");
 			System.out.println("email: "+email);
@@ -103,6 +115,26 @@ public class RegistrationController {
 		}
 		
 		return account;
+	}
+	
+	private Long getConsultantWithFewerUsers() {
+		/* 
+		 * Per prendere il Consultant che ha meno Users associati
+		 */
+		List<Long> consultantIds = consultantDao.getAllConsultantsIds();
+
+		Long consultant_selected = Long.valueOf(0); 
+		int minUsersAssociated = 10000000;
+		int currentUsersAssociated;
+		for(Long consultant_id : consultantIds) {
+			currentUsersAssociated = consultantDao.getAssociatedUsers(consultant_id).size();
+			if(currentUsersAssociated < minUsersAssociated) {
+				consultant_selected = consultant_id;
+				minUsersAssociated = currentUsersAssociated;
+			}
+		}
+		
+		return consultant_selected;
 	}
 	
 }
