@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import otp.OTPAuthenticated;
+import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.CardController;
 import utils.ParserJson;
 
@@ -23,7 +24,8 @@ public class CardService {
 	@PATCH
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("block")
-	@OTPAuthenticated
+	//@OTPAuthenticated
+	@OTPAuthenticatedStateful
 	public Response blockCard(@HeaderParam("Authorization") String authorization, String json_id) {
 		String[] split = authorization.split(" ");
 	    final String email = split[0];

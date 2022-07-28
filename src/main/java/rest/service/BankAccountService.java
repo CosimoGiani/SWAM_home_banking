@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import model.Card;
 import model.Transaction;
 import otp.OTPAuthenticated;
+import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.BankAccountController;
 import utils.ParserJson;
 
@@ -29,7 +30,8 @@ public class BankAccountService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("transactions")
-	@OTPAuthenticated
+	//@OTPAuthenticated
+	@OTPAuthenticatedStateful
 	public List<Transaction> getBankAccountTransactions(@HeaderParam("Authorization") String authorization, String id) {
 		String[] split = authorization.split(" ");
 	    final String email = split[0];
@@ -52,7 +54,8 @@ public class BankAccountService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("cards")
-	@OTPAuthenticated
+	//@OTPAuthenticated
+	@OTPAuthenticatedStateful
 	public List<Card> getBankAccountCards(@HeaderParam("Authorization") String authorization, String id) {
 		String[] split = authorization.split(" ");
 	    final String email = split[0];
@@ -74,7 +77,8 @@ public class BankAccountService {
 	@DELETE
 	@Path("delete-account")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@OTPAuthenticated
+	//@OTPAuthenticated
+	@OTPAuthenticatedStateful
 	public Response deleteBankAccount(String id) {
 		
 		try {

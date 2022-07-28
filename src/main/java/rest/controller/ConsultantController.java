@@ -1,16 +1,23 @@
 package rest.controller;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 
+import dao.BankAccountDao;
+import dao.CardDao;
 import dao.ConsultantDao;
 import dao.UserDao;
 import model.BankAccount;
+import model.Card;
 import model.Consultant;
+import model.Transaction;
 import model.User;
 import model.enumeration.BankAccountType;
+import model.enumeration.CardType;
 
 @Model
 public class ConsultantController {
@@ -20,6 +27,12 @@ public class ConsultantController {
 	
 	@Inject
 	private UserDao userDao;
+	
+	@Inject
+	private BankAccountDao accountDao;
+	
+	@Inject
+	private CardDao cardDao;
 	
 	public List<User> getAssociatedUsers(String identificationNumber, boolean obscurePassword) throws Exception {
 		Long id = consultantDao.getConsultantIdFromIdNumber(identificationNumber);
@@ -60,20 +73,40 @@ public class ConsultantController {
 		return userDao.getAssociatedBankAccounts(userId);
 	}
 	
-	public BankAccount getBankAccountOwnedByUser(Long accountId, Long userId) {
+	public BankAccount getBankAccountOwnedByUser(Long accountId, Long userId) throws Exception {
 		List<BankAccount> accounts = userDao.getAssociatedBankAccounts(userId);
-		BankAccount accountOwned = null;
+		if (accounts.isEmpty())
+			throw new Exception();
 		for (BankAccount account: accounts) {
 			if (account.getId().equals(accountId)) {
-				accountOwned = account;
-				return accountOwned;
+				return account;
 			}
 		}
-		return accountOwned;
+		return null;
 	}
 	
 	public void modifyAccountType(BankAccountType type, Long id) {
 		consultantDao.modifyAccountType(type, id);
+	}
+	
+	public List<Transaction> getBankAccountTransactions(Long accountId) {
+		List<Transaction> transactions = accountDao.getBankAccountTransactions(accountId);
+		if (transactions.isEmpty())
+			return null;
+		return transactions;
+	}
+	
+	public void addNewCard(BankAccount account, String cardNumber, float massimale, CardType cardType) throws Exception {
+		Card card = new Card(UUID.randomUUID().toString());
+		account.addCard(card);
+		card.setCardNumber(cardNumber);
+		card.setExpirationDate(LocalDate.now().plusYears(2));
+		card.setMassimale(massimale);
+		card.setCardType(cardType);
+		card.setActive(true);
+		cardDao.save(card);
+		accountDao.updateCards(account);
+		//else throw new Exception();
 	}
 
 }

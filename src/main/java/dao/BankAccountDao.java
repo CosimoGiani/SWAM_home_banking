@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.hibernate.Session;
+
 import model.BankAccount;
 import model.Card;
 import model.Transaction;
@@ -54,6 +56,12 @@ public class BankAccountDao implements Serializable {
 	@Transactional
 	public void deleteBankAccount(Long id) {
 		em.createQuery("delete from BankAccount where id = :id").setParameter("id", id).executeUpdate();
+	}
+	
+	@Transactional
+	public void updateCards(BankAccount account) {
+		em.unwrap(Session.class).update(account);
+		//return true;
 	}
 
 }

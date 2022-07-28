@@ -14,6 +14,7 @@ import model.User;
 import javax.ws.rs.Produces;
 
 import otp.OTPAuthenticated;
+import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.UserController;
 
 @Path("user")
@@ -24,7 +25,8 @@ public class UserService {
 	
 	@GET
 	@Path("accounts")
-	@OTPAuthenticated
+	//@OTPAuthenticated
+	@OTPAuthenticatedStateful
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<BankAccount> getBankAccounts(@HeaderParam("Authorization") String authorization) {
 		String[] split = authorization.split(" ");
@@ -35,7 +37,8 @@ public class UserService {
 	
 	@GET
 	@Path("personal-data")
-	@OTPAuthenticated
+	//@OTPAuthenticated
+	@OTPAuthenticatedStateful
 	@Produces(MediaType.APPLICATION_JSON)
 	public User getPersonalData(@HeaderParam("Authorization") String authorization) {
 		String[] split = authorization.split(" ");
