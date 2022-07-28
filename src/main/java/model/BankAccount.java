@@ -30,7 +30,7 @@ public class BankAccount extends BaseEntity {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Transaction> transactions;	
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", referencedColumnName = "id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Card> cards;	

@@ -179,7 +179,7 @@ public class ConsultantService {
 				cardType = CardType.RICARICABILE;
 			}
 			if (controller.checkUserIsAssociated(consultantId, userId)) {
-				BankAccount account = controller.getBankAccountOwnedByUser(accountId, userId);
+				BankAccount account = controller.getBankAccountLazy(accountId, userId);
 				controller.addNewCard(account, cardNumber, massimale, cardType);
 				return Response.ok().entity("Carta aggiunta con successo").build();
 			} else return Response.notAcceptable(null).entity("Carta non aggiunta").build();

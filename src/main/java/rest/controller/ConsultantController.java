@@ -96,6 +96,19 @@ public class ConsultantController {
 		return transactions;
 	}
 	
+	public BankAccount getBankAccountLazy(Long accountId, Long userId) throws Exception {
+		List<BankAccount> accounts = userDao.getAssociatedBankAccounts(userId);
+		if (accounts.isEmpty())
+			throw new Exception();
+		for (BankAccount account: accounts) {
+			if (account.getId().equals(accountId)) {
+				BankAccount accountToReturn = accountDao.getAccountById(account.getId());
+				return accountToReturn;
+			}
+		}
+		return null;
+	}
+	
 	public void addNewCard(BankAccount account, String cardNumber, float massimale, CardType cardType) throws Exception {
 		Card card = new Card(UUID.randomUUID().toString());
 		account.addCard(card);
@@ -105,8 +118,7 @@ public class ConsultantController {
 		card.setCardType(cardType);
 		card.setActive(true);
 		cardDao.save(card);
-		accountDao.updateCards(account);
-		//else throw new Exception();
+		accountDao.update(account);
 	}
 
 }
