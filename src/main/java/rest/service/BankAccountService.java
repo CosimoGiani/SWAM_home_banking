@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 
 import model.Card;
 import model.Transaction;
-import otp.OTPAuthenticated;
+// import otp.OTPAuthenticated;
 import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.BankAccountController;
 import utils.ParserJson;

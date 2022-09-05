@@ -18,7 +18,7 @@ import model.User;
 
 import javax.ws.rs.Produces;
 
-import otp.OTPAuthenticated;
+// import otp.OTPAuthenticated;
 import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.UserController;
 import utils.ParserJson;

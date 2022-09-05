@@ -10,7 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import otp.OTPAuthenticated;
+// import otp.OTPAuthenticated;
 import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.CardController;
 import utils.ParserJson;

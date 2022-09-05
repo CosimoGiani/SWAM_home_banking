@@ -26,20 +26,6 @@ public class UserDao implements Serializable {
 		em.persist(user);
 	}
 	
-	public User login(User userData) {
-		List<User> result = em.createQuery("from User "
-											+ "where email = :email "
-											+ "and password = :password", User.class)
-							  .setParameter("email", userData.getEmail())
-							  .setParameter("password", userData.getPassword())
-							  .setMaxResults(1)
-							  .getResultList();
-		if(result.isEmpty()) {
-			return null;
-		}
-		return result.get(0);
-	}
-	
 	public boolean isEmailInDB(String email) {
 		List<User> result = em.createQuery("from User where email = :email ", User.class)
 							  .setParameter("email", email)

@@ -8,6 +8,7 @@ public class OTPTimerTask extends TimerTask {
 	private String email;
 	
 	public OTPTimerTask(OneTimePasswordAuthenticator otpAuthenticator, String email) {
+		super();
 		this.otpAuthenticator = otpAuthenticator;
 		this.email = email;
 	}

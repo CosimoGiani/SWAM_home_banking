@@ -8,13 +8,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.gson.Gson;
-
-import model.User;
 import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.AuthenticationController;
 import utils.ParserJson;
@@ -24,21 +20,6 @@ public class AuthenticationService {
 	
 	@Inject
 	private AuthenticationController authController;
-	
-	@POST
-	@Path("loginOLD")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces( { "application/json", "text/plain" } )
-	public Response login(String request) throws Exception {
-		Gson gson = new Gson();
-		try {
-			Long response = authController.login(gson.fromJson(request, User.class));
-			Response resp = Response.ok(gson.toJson(response), MediaType.APPLICATION_JSON).build();
-			return resp;
-		} catch(Exception e) {
-			return Response.notAcceptable(null).build();
-		}
-	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -90,10 +71,11 @@ public class AuthenticationService {
 			authController.removeOTP(email);
 			return Response.ok("Logout eseguito con successo").build();
 		} catch (Exception e) {
-			return Response.notAcceptable(null).entity("Session Error").build();
+			return Response.notAcceptable(null).entity("Errore di sessione").build();
 		}
 	}
 	
+	/*
 	@POST
 	@Path("login/consultant")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -120,5 +102,5 @@ public class AuthenticationService {
 	public Response logoutConsultant() {
 		return Response.ok().entity("Consulente ha effettuato il logout").build();
 	}
-
+	*/
 }
