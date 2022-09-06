@@ -9,34 +9,25 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import dao.CardDao;
-import model.BankAccount;
 import model.Card;
-import model.enumeration.BankAccountType;
 import model.enumeration.CardType;
 
 public class CardDaoTest extends JPATest {
 	
 	private CardDao cardDao;
 	private Card card;
-	//private BankAccount account;
 	
 	@Override
 	protected void init() throws IllegalAccessException {
 		System.out.println("Avvio init custom per CardDaoTest");
 		
-		//account = new BankAccount(UUID.randomUUID().toString());
-		//account.setType(BankAccountType.ORDINARIO);
-		//account.setBalance(0);
-		
 		card = new Card(UUID.randomUUID().toString());
-		//account.addCard(card);
 		card.setCardNumber("7777 5555 3333 1111");
 		card.setExpirationDate(LocalDate.now().plusYears(2));
 		card.setMassimale((float) 1500);
 		card.setCardType(CardType.DEBITO);
 		card.setActive(true);
 		
-		//entityManager.persist(account);
 		entityManager.persist(card);
 		cardDao = new CardDao();                                                   
         FieldUtils.writeField(cardDao, "em", entityManager, true);
