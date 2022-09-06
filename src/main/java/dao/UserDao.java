@@ -69,8 +69,8 @@ public class UserDao implements Serializable {
 		         .setParameter("email", email)
 		         .getSingleResult();
 
-		if(user_id == null)
-			throw new NotFoundException("No user connected to this email");
+		//if(user_id == null)
+		//	throw new NotFoundException("No user connected to this email");
 		
 		return user_id;
 	}
@@ -80,8 +80,8 @@ public class UserDao implements Serializable {
 		         .setParameter("email", email)
 		         .getSingleResult();
 
-		if(consultant_id == null)
-			throw new NotFoundException("No consultant is associated to this user");
+		//if(consultant_id == null)
+		//	throw new NotFoundException("No consultant is associated to this user");
 		
 		return consultant_id;
 	}

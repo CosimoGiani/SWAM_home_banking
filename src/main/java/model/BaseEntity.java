@@ -31,12 +31,19 @@ public abstract class BaseEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BaseEntity that = (BaseEntity) o;
-        return Objects.equals(id, that.id);
-    }
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof BaseEntity)) {
+			return false;
+		}
+		BaseEntity other = (BaseEntity) obj;
+		return uuid.equals(other.getUuid());
+	}
 
     @Override
     public int hashCode() {
