@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
@@ -56,14 +57,9 @@ public class ConsultantDao implements Serializable {
 		List<User> result = em.createQuery("from User where consultant_id = :consultant_id", User.class)
 				 			  .setParameter("consultant_id", consultant_id)
 				 			  .getResultList();
+		if (result.isEmpty())
+			throw new NoResultException("No Users are associated to this Consultant");
 		return result;
-	}
-	
-	public User getUserFromId(Long id) {
-		User user = em.createQuery("from User where id = :id", User.class)
-					  .setParameter("id", id)
-					  .getSingleResult();
-		return user;
 	}
 	
 	@Transactional

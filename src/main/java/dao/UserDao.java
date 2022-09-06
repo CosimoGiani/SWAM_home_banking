@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
@@ -93,9 +94,16 @@ public class UserDao implements Serializable {
 									 .getResultList();
 		// System.out.println(result.get(0).getUuid());
 		if(result.isEmpty())
-			throw new NotFoundException("No Bank Accounts are associated to this User");
+			throw new NoResultException("No Bank Accounts are associated to this User");
 		
 		return result;
+	}
+	
+	public User getUserFromId(Long id) {
+		User user = em.createQuery("from User where id = :id", User.class)
+					  .setParameter("id", id)
+					  .getSingleResult();
+		return user;
 	}
 	
 }

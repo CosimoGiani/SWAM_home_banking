@@ -32,10 +32,10 @@ public class CardDao implements Serializable {
 				.executeUpdate();
 		if(rowsUpdated == 1)
 			return true;
-		else if (rowsUpdated == 0)
-			return false;
 		else
-			throw new QueryException("Something is wrong in the Query");
+			return false;
+		//else
+		//	throw new QueryException("Something is wrong in the Query");
 	}
 	
 	@Transactional

@@ -5,13 +5,8 @@ import model.BankAccount;
 import model.Consultant;
 import model.User;
 import model.enumeration.BankAccountType;
-
-import java.util.List;
 import java.util.UUID;
-
 import javax.persistence.NoResultException;
-import javax.ws.rs.NotFoundException;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -48,18 +43,11 @@ public class UserDaoTest extends JPATest {
 		user.addBankAccountToList(account2);
 		
 		entityManager.persist(user);                                                //persisto manualmente, senza passare dal DAO
+		entityManager.persist(account1);
+		entityManager.persist(account2);
         userDao = new UserDao();                                                    //UserDao creato manualmente - niente CDI!
         FieldUtils.writeField(userDao, "em", entityManager, true);
 	}
-	
-	@Test
-    public void testGetUserFromEmail() {
-        User result = userDao.getUserFromEmail(user.getEmail());
-        Assertions.assertEquals(user.getId(), result.getId());
-        Assertions.assertEquals(user.getUuid(), result.getUuid());
-        Assertions.assertEquals(user.getEmail(), result.getEmail());
-        Assertions.assertEquals(user.getPassword(), result.getPassword());
-    }
 	
 	@Test
     public void testSave() {                                                            // test di funzionalità di tipo SAVE
@@ -75,9 +63,18 @@ public class UserDaoTest extends JPATest {
     }
 	
 	@Test
+    public void testGetUserFromEmail() {
+        User result = userDao.getUserFromEmail(user.getEmail());
+        Assertions.assertEquals(user.getId(), result.getId());
+        Assertions.assertEquals(user.getUuid(), result.getUuid());
+        Assertions.assertEquals(user.getEmail(), result.getEmail());
+        Assertions.assertEquals(user.getPassword(), result.getPassword());
+    }
+	
+	@Test
 	public void testIsEmailInDB() {
 		Assertions.assertTrue(userDao.isEmailInDB("user1@example.com"));
-		Assertions.assertFalse(userDao.isEmailInDB("user2@example.com"));
+		Assertions.assertFalse(userDao.isEmailInDB("test@example.com"));
 	}
 	
 	@Test
@@ -107,12 +104,21 @@ public class UserDaoTest extends JPATest {
 	
 	@Test
 	public void testGetAssociatedBankAccounts() {
-		List<BankAccount> accountsExpected = user.getBankAccounts();
-		List<BankAccount> accountsActual = userDao.getAssociatedBankAccounts(user.getId());
-		Assertions.assertEquals(accountsExpected, accountsActual);
-		/*Assertions.assertThrows(NotFoundException.class, ()->{
-			userDao.getAssociatedBankAccounts(user.getId());
-		});*/
+		User userTest = new User(UUID.randomUUID().toString());
+		Assertions.assertEquals(user.getBankAccounts().size(), userDao.getAssociatedBankAccounts(user.getId()).size());
+		Assertions.assertTrue(userDao.getAssociatedBankAccounts(user.getId()).containsAll(user.getBankAccounts()));
+		Assertions.assertThrows(NoResultException.class, ()->{
+			userDao.getAssociatedBankAccounts(userTest.getId());
+		});
+	}
+	
+	@Test
+	public void testGetUserFromId() {
+		User result = userDao.getUserFromId(user.getId());
+        Assertions.assertEquals(user.getId(), result.getId());
+        Assertions.assertEquals(user.getUuid(), result.getUuid());
+        Assertions.assertEquals(user.getEmail(), result.getEmail());
+        Assertions.assertEquals(user.getPassword(), result.getPassword());
 	}
 
 }

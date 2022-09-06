@@ -53,7 +53,7 @@ public class ConsultantController {
 	}
 	
 	public User getUserDetails(Long user_id,  boolean obscurePassword) throws Exception {
-		User user = consultantDao.getUserFromId(user_id);
+		User user = userDao.getUserFromId(user_id);
 		if (user == null)
 			throw new Exception();
 		if (obscurePassword)
@@ -62,7 +62,7 @@ public class ConsultantController {
 	}
 	
 	public boolean checkUserIsAssociated(Long consultantId, Long userId) {
-		User user = consultantDao.getUserFromId(userId);
+		User user = userDao.getUserFromId(userId);
 		if (user.getConsultant().getId() == consultantId)
 			return true;
 		else return false;
