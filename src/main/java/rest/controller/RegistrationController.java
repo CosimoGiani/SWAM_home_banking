@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 import dao.BankAccountDao;
@@ -132,7 +133,11 @@ public class RegistrationController {
 		int minUsersAssociated = 10000000;
 		int currentUsersAssociated;
 		for(Long consultant_id : consultantIds) {
-			currentUsersAssociated = consultantDao.getAssociatedUsers(consultant_id).size();
+			try {
+				currentUsersAssociated = consultantDao.getAssociatedUsers(consultant_id).size();
+			} catch(NoResultException e) {
+				currentUsersAssociated = 0;
+			}
 			if(currentUsersAssociated < minUsersAssociated) {
 				consultant_selected = consultant_id;
 				minUsersAssociated = currentUsersAssociated;

@@ -25,21 +25,24 @@ import com.spire.pdf.widget.PdfTextBoxFieldWidget;
 
 @ApplicationScoped
 public class PdfUtil {
-	private String file_path;
+	private String blank_file_path;
 	private File pdf;
 	private String upload_folder_path;
 	
 	public PdfUtil() throws IOException{
 		
 		Path path = Paths.get("../standalone/deployments/contract.pdf").toAbsolutePath().normalize();
-		file_path = path.toString();
+		blank_file_path = path.toString();
 		// System.out.println(file_path);
 		
-		pdf = new File(file_path);
+		pdf = new File(blank_file_path);
 		
 		path = Paths.get("../standalone/deployments/uploaded_files/").toAbsolutePath().normalize();
 		upload_folder_path = path.toString();
 		// System.out.println(upload_folder_path);
+		
+		File uploadDir = new File(upload_folder_path);
+		uploadDir.mkdir();
 	}
 	
 	public File getPdf() {
@@ -47,33 +50,33 @@ public class PdfUtil {
 	}
 	
 	public Map<String, Object> extractData(InputStream uploadedInputStream) throws FileNotFoundException, IOException, NumberFormatException {
-		String fileName = UUID.randomUUID().toString() + ".pdf";
-		String filePath = upload_folder_path + fileName;
+		String uploadedFileName = "/" + UUID.randomUUID().toString() + ".pdf";
+		String uploadedFilePath = upload_folder_path + uploadedFileName;
 		
 	    int read = 0;  
 	    byte[] bytes = new byte[1024];  
-	    FileOutputStream out = new FileOutputStream(new File(filePath));  
+	    FileOutputStream out = new FileOutputStream(new File(uploadedFilePath));  
 	    while ((read = uploadedInputStream.read(bytes)) != -1) {  
 	        out.write(bytes, 0, read);  
 	    }
 	    out.flush();  
 	    out.close();  
 	    
-	    Map<String, Object> data = extractData(filePath);
+	    Map<String, Object> data = extractData(uploadedFilePath);
 	    
 	    // System.out.println(data);
 	    
-		cleanUp(file_path);
+		cleanUp(uploadedFilePath);
 	    
 	    return data;
 	}
 	
-	private Map<String, Object> extractData(String filePath) throws NumberFormatException {
+	private Map<String, Object> extractData(String uploadedFilePath) throws NumberFormatException {
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		
 		PdfDocument pdf = new PdfDocument();
-		pdf.loadFromFile(filePath);
+		pdf.loadFromFile(uploadedFilePath);
 		
 		PdfFormWidget formWidget = (PdfFormWidget)pdf.getForm();
 		List<?> fieldsList = (List<?>) formWidget.getFieldsWidget().getList();
@@ -83,7 +86,7 @@ public class PdfUtil {
 		
 		if(containsDigit(name) || containsDigit(surname)) {
 			pdf.close();
-			cleanUp(file_path);
+			cleanUp(uploadedFilePath);
 			throw new IllegalArgumentException("Name or Surname contains a number!");
 		}
 		
@@ -98,7 +101,7 @@ public class PdfUtil {
 		Period age = Period.between(birthDay, currentDate);
 		if(age.getYears() < 18) {
 			pdf.close();
-			cleanUp(file_path);
+			cleanUp(uploadedFilePath);
 			throw new IllegalArgumentException("You are too young to open a bank account!");
 		}
 		
@@ -108,8 +111,7 @@ public class PdfUtil {
 		
 		if(containsDigit(city) || containsDigit(province)) {
 			pdf.close();
-			File f = new File(filePath);
-		    f.delete();
+			cleanUp(uploadedFilePath);
 			throw new IllegalArgumentException("City or Province contains a number!");
 		}
 		
@@ -117,7 +119,7 @@ public class PdfUtil {
 		
 		if(!isLegalPhoneNumber(phone)) {
 			pdf.close();
-			cleanUp(file_path);
+			cleanUp(uploadedFilePath);
 			throw new IllegalArgumentException("Phone Number is not Valid!");
 		}
 		
@@ -134,7 +136,7 @@ public class PdfUtil {
 		
 		if(selectedBankAccount == "Under30" && age.getYears() > 30) {
 			pdf.close();
-			cleanUp(file_path);
+			cleanUp(uploadedFilePath);
 			throw new IllegalArgumentException("You are too old to get an Under30 account!");
 		}
 		
@@ -183,8 +185,8 @@ public class PdfUtil {
 		}
 	}
 	
-	private void cleanUp(String filePath) {
-		File f = new File(filePath);
+	private void cleanUp(String uploadedFilePath) {
+		File f = new File(uploadedFilePath);
 	    f.delete();
 	}
 	
