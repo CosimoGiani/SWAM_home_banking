@@ -46,7 +46,13 @@ public class RegistrationService {
 			InputStream uploadedInputStream = input.getFormDataPart("PDF", InputStream.class, null);
 			String email = input.getFormDataPart("email", String.class, null);
 		    String password = input.getFormDataPart("password", String.class, null);
-			return registrationController.createAccount(uploadedInputStream, email, password);
+		    String msg = registrationController.createAccount(uploadedInputStream, email, password);
+			if (msg.equals("Account created successfully")) {
+				return Response.status(200).entity(msg).build();
+			} else if (msg.equals("Interal Error")) {
+				return Response.status(500).entity(msg).build();
+			} else
+				return Response.notAcceptable(null).entity(msg).build();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return Response.status(500).entity("Internal Error").build();
