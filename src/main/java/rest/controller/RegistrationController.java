@@ -2,7 +2,6 @@ package rest.controller;
 
 import java.io.File;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.UUID;
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
 
 import dao.BankAccountDao;
 import dao.ConsultantDao;
@@ -39,19 +37,22 @@ public class RegistrationController {
 	}
 	
 	@Transactional //altrimenti la save() dei DAO non funziona
-	public Response createAccount(InputStream uploadedInputStream, String email, String password) {
+	public String createAccount(InputStream uploadedInputStream, String email, String password) {
 		
 		if(!email.contains("@")) 
-			return Response.notAcceptable(null).entity("Invalid email").build();
+			//return Response.notAcceptable(null).entity("Invalid email").build();
+			return "Invalid email";
 		
 		if(password.length() < 4) 
-			return Response.notAcceptable(null).entity("Password is too short").build();
+			//return Response.notAcceptable(null).entity("Password is too short").build();
+			return "Password is too short";
 		
 		try {  
 			Map<String, Object> extractedData = pdfUtil.extractData(uploadedInputStream);
 			
 			if(userDao.isEmailInDB(email)) 
-				return Response.notAcceptable(null).entity("There is already an account linked to this email").build();
+				//return Response.notAcceptable(null).entity("There is already an account linked to this email").build();
+				return "There is already an account linked to this email";
 				
 			User newUser = createUser(email, password, extractedData);
 			BankAccount newAccount = createBankAccount(newUser, (String) extractedData.get("selectedBankAccount"));
@@ -71,17 +72,21 @@ public class RegistrationController {
 			System.out.println("firstname: "+extractedData.get("name"));
 			System.out.println("secondname: "+extractedData.get("surname"));
 			
-			return Response.status(200).entity("Account created successfully").build();
+			//return Response.status(200).entity("Account created successfully").build();
+			return "Account created successfully";
 			
-		} catch (ParseException e) {
-			return Response.notAcceptable(null).entity("Wrong bithday date").build();
+		} catch (NumberFormatException e) {
+			//return Response.notAcceptable(null).entity("Wrong bithday date").build();
+			return "Wrong birthday date";
 			
 		} catch (IllegalArgumentException e)	{
-			return Response.notAcceptable(null).entity(e.getMessage()).build();
+			//return Response.notAcceptable(null).entity(e.getMessage()).build();
+			return e.getMessage();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.status(500).entity("Internal Error").build();
+			//return Response.status(500).entity("Internal Error").build();
+			return "Interal Error";
 		}
 	}
 	
