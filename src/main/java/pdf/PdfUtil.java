@@ -13,13 +13,11 @@ import java.io.InputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
 
 import com.spire.ms.System.Collections.Generic.List;
 import com.spire.pdf.PdfDocument;
-//import com.spire.pdf.fields.PdfField;
 import com.spire.pdf.widget.PdfFormWidget;
 import com.spire.pdf.widget.PdfRadioButtonListFieldWidget;
 import com.spire.pdf.widget.PdfTextBoxFieldWidget;
@@ -48,7 +46,7 @@ public class PdfUtil {
 		return this.pdf;
 	}
 	
-	public Map<String, Object> extractData(InputStream uploadedInputStream) throws FileNotFoundException, IOException, ParseException {
+	public Map<String, Object> extractData(InputStream uploadedInputStream) throws FileNotFoundException, IOException, NumberFormatException {
 		String fileName = UUID.randomUUID().toString() + ".pdf";
 		String filePath = upload_folder_path + fileName;
 		
@@ -70,7 +68,7 @@ public class PdfUtil {
 	    return data;
 	}
 	
-	private Map<String, Object> extractData(String filePath) throws ParseException {
+	private Map<String, Object> extractData(String filePath) throws NumberFormatException {
 		
 		Map<String, Object> data = new HashMap<String, Object>();
 		
