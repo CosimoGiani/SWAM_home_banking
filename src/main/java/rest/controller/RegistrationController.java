@@ -41,18 +41,15 @@ public class RegistrationController {
 	public String createAccount(InputStream uploadedInputStream, String email, String password) {
 		
 		if(!email.contains("@")) 
-			//return Response.notAcceptable(null).entity("Invalid email").build();
 			return "Invalid email";
 		
 		if(password.length() < 4) 
-			//return Response.notAcceptable(null).entity("Password is too short").build();
 			return "Password is too short";
 		
 		try {  
 			Map<String, Object> extractedData = pdfUtil.extractData(uploadedInputStream);
 			
 			if(userDao.isEmailInDB(email)) 
-				//return Response.notAcceptable(null).entity("There is already an account linked to this email").build();
 				return "There is already an account linked to this email";
 				
 			User newUser = createUser(email, password, extractedData);
@@ -73,20 +70,16 @@ public class RegistrationController {
 			System.out.println("firstname: "+extractedData.get("name"));
 			System.out.println("secondname: "+extractedData.get("surname"));
 			
-			//return Response.status(200).entity("Account created successfully").build();
 			return "Account created successfully";
 			
 		} catch (NumberFormatException e) {
-			//return Response.notAcceptable(null).entity("Wrong bithday date").build();
 			return "Wrong birthday date";
 			
 		} catch (IllegalArgumentException e)	{
-			//return Response.notAcceptable(null).entity(e.getMessage()).build();
 			return e.getMessage();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			//return Response.status(500).entity("Internal Error").build();
 			return "Interal Error";
 		}
 	}

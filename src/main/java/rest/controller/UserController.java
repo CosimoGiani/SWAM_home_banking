@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.enterprise.inject.Model;
 import javax.inject.Inject;
-import javax.ws.rs.core.Response;
 
 import dao.ConsultantDao;
 import dao.UserDao;
@@ -38,7 +37,7 @@ public class UserController {
 		return consultantDao.getConsultantLazy(consultant_id, true);
 	}
 	
-	public Response sendMessageToConsultant(String userEmail, String object, String corpus) {
+	public String sendMessageToConsultant(String userEmail, String object, String corpus) {
 		User user = userDao.getUserFromEmail(userEmail);
 		String nameSender = user.getFirstname() + " " + user.getLastname();
 		
@@ -50,7 +49,7 @@ public class UserController {
 		
 		sendEmail(userEmail, consultantEmail, nameSender, nameReciever, object, corpus);
 		
-		return Response.ok("Messaggio inviato correttamente").build();
+		return "Messaggio inviato correttamente";
 	}
 	
 	private void sendEmail(String fromEmail, String toEmail, String nameSender, String nameReciever, String object, String corpus) {

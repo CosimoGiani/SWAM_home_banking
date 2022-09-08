@@ -13,7 +13,6 @@ import dao.BankAccountDao;
 import model.BankAccount;
 import model.Card;
 import model.Transaction;
-import model.User;
 import model.enumeration.BankAccountType;
 import model.enumeration.CardType;
 import model.enumeration.TransactionType;
@@ -50,9 +49,9 @@ public class BankAccountDaoTest extends JPATest {
 		card.setCardType(CardType.DEBITO);
 		card.setActive(true);
 		
-		entityManager.persist(account); // as all other are cascaded (possibly)
+		entityManager.persist(account); 
 	
-		bankAccountDao = new BankAccountDao(); //UserDao creato manualmente - niente CDI!
+		bankAccountDao = new BankAccountDao();
         FieldUtils.writeField(bankAccountDao, "em", entityManager, true);
 	}
 	
@@ -62,13 +61,13 @@ public class BankAccountDaoTest extends JPATest {
 		newBankAccount.setType(BankAccountType.ORDINARIO);
 		newBankAccount.setBalance(300);
 		
-        bankAccountDao.save(newBankAccount);   // questa volta persisto tramite DAO ..
+        bankAccountDao.save(newBankAccount); 
         
         BankAccount manuallyRetrievedBankAccount = entityManager.
                 createQuery("FROM BankAccount WHERE uuid = :uuid", BankAccount.class)
-                .setParameter("uuid", newBankAccount.getUuid())           	            // ..ed estraggo manualmente tramite query in JPQL
+                .setParameter("uuid", newBankAccount.getUuid())           	            
                 .getSingleResult();
-        Assertions.assertEquals(newBankAccount, manuallyRetrievedBankAccount);    		// verifico poi l'uguaglianza tramite asserzioni
+        Assertions.assertEquals(newBankAccount, manuallyRetrievedBankAccount);    		
 	}
 	
 	@Test 

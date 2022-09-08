@@ -79,7 +79,8 @@ public class UserService {
 	    String corpus = messageData.get("corpus");
 	    
 	    if(object != null && corpus != null) {
-	    	return userController.sendMessageToConsultant(userEmail, object, corpus);
+	    	String msg = userController.sendMessageToConsultant(userEmail, object, corpus);
+	    	return Response.ok(msg).build();
 	    } else {
 	    	return Response.status(400).entity("La formulazione del messaggio non è corretta").build();
 	    }
