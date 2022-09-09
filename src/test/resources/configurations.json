@@ -1,0 +1,12 @@
+{
+	"rest": {
+		"baseURI": "http://localhost/",
+		"port": 8080
+	},
+	"DB": {
+		"connectionURL": "jdbc:mariadb://localhost:3306/test-schema?serverTimezone=UTC",
+		"username": "test-client",
+		"password": "test"
+	},
+	"deploymentsPath": "C:/Users/dpucc/Desktop/SWAM/wildfly-26.1.1.Final/standalone/deployments/"
+}

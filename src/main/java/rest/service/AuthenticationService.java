@@ -76,6 +76,7 @@ public class AuthenticationService {
 			authController.removeOTP(email);
 			return Response.ok("Logout eseguito con successo").build();
 		} catch (Exception e) {
+			// entriamo qua se c'è un'eccezione a livello .remove(OTP)
 			return Response.notAcceptable(null).entity("Errore di sessione").build();
 		}
 	}
