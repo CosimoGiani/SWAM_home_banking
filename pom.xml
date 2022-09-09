@@ -109,6 +109,12 @@
             <version>3.9.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency> 
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>3.0.7</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -123,6 +129,12 @@
 				<version>3.2.3</version>
 			</plugin>
 		</plugins>
+		
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
 	</build>
 	
 </project>

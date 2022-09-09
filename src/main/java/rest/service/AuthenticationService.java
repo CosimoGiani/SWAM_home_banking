@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.JsonSyntaxException;
+
 import otpStateful.OTPAuthenticatedStateful;
 import rest.controller.AuthenticationController;
 import utils.ParserJson;
@@ -36,9 +38,11 @@ public class AuthenticationService {
 			} else {
 				return Response.notAcceptable(null).entity("Credenziali non valide").build();
 			}
+		} catch (JsonSyntaxException e) {
+			return Response.notAcceptable(null).entity("Errore nella formulazione delle richiesta").build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.notAcceptable(null).entity("Errore nella generazione dell'OTP").build();
+			return Response.status(500).entity("Errore nella generazione dell'OTP").build();
 		}
 	}
 	
@@ -57,7 +61,8 @@ public class AuthenticationService {
 				// entriamo qua solo se il filter OTPAuthenticated non funziona oppure c'è stata una cancellazione sul DB
 				return Response.status(500).entity("Internal Error").build(); 
 		} catch (Exception e) {
-			return Response.notAcceptable(null).entity("Utente non autenticato").build();
+				// entriamo qua se c'è una eccezione a livello di UserDao nella query
+			return Response.status(500).entity("Internal Error").build();
 		}
 	}
 	

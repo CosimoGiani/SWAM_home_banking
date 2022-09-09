@@ -1,13 +1,16 @@
 package otpStateful;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Timer;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
-
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -36,6 +39,9 @@ public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 	private String otpDefaultDuration;
 	private Timer otpTimer;
 	private HashMap<String, OTPTimerTask> otpTimerTasks;
+	
+	/* Funzionalità utilizzata in fase di testing */
+	private boolean isTest = true;
 	 
 	
 	public OneTimePasswordAuthenticator() {
@@ -174,6 +180,24 @@ public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 		System.out.println("ed è stato inviato alla seguente mail: " + email);
 		System.out.println("==============================================================");
 		
+		if(isTest) {
+			try {
+				String fileName = "secretOTP.txt";
+				Path path = Paths.get("../standalone/deployments/test_files/").toAbsolutePath().normalize();
+				String test_folder_path = path.toString();
+				
+				File testDir = new File(test_folder_path);
+				testDir.mkdir();
+				
+				FileWriter file = new FileWriter(test_folder_path + "/" + fileName);
+				file.write(secret_otp);
+				file.close();
+				
+			} catch (IOException e) {
+				
+			}
+		}
 	}
+	
 
 }
