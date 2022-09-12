@@ -41,10 +41,11 @@ public class BankAccountService {
 			if (controller.userOwnsBankAccount(email, idValue)) {
 				List<Transaction> transactions = controller.getBankAccountTransactions(idValue);
 				return transactions;
+			}else {
+				return null;
 			}
-			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			return null;
 		}
 		
@@ -63,12 +64,12 @@ public class BankAccountService {
 			Map<String, String> idData = ParserJson.fromString(id);
 			Long idValue = Long.parseLong(idData.get("id"));
 			if (controller.userOwnsBankAccount(email, idValue)) {
-				List<Card> transactions = controller.getBankAccountCards(idValue);
-				return transactions;
+				List<Card> cards = controller.getBankAccountCards(idValue);
+				return cards;
 			}
 			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			return null;
 		}
 		
@@ -79,17 +80,22 @@ public class BankAccountService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	//@OTPAuthenticated
 	@OTPAuthenticatedStateful
-	public Response deleteBankAccount(String id) {
-		
+	public Response deleteBankAccount(@HeaderParam("Authorization") String authorization, String id) {
+		String[] split = authorization.split(" ");
+	    final String email = split[0];
 		try {
 			Map<String, String> idData = ParserJson.fromString(id);
 			Long idValue = Long.parseLong(idData.get("id"));
-			controller.deleteBankAccount(idValue);
-			return Response.ok().entity("Conto corrente chiuso con successo").build();
+			if(controller.userOwnsBankAccount(email, idValue)) {
+				controller.deleteBankAccount(idValue);
+				return Response.ok().entity("Conto corrente chiuso con successo").build();
+			} else {
+				return Response.status(403).entity("Impossibile chiudere il conto").build();
+			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.notAcceptable(null).entity("Impossibile chiudere il conto").build();
+			// e.printStackTrace();
+			return Response.status(403).entity("Impossibile chiudere il conto").build();
 		}
 		
 	}
