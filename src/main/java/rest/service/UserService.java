@@ -1,9 +1,11 @@
 package rest.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -37,8 +39,13 @@ public class UserService {
 	public List<BankAccount> getBankAccounts(@HeaderParam("Authorization") String authorization) {
 		String[] split = authorization.split(" ");
 		String userEmail = split[0];
-	    
-	    return userController.getAssociatedBankAccounts(userEmail);
+		List<BankAccount> accounts = new ArrayList<BankAccount>(); 
+	    try {
+	    	accounts = userController.getAssociatedBankAccounts(userEmail);
+	    	return accounts;
+	    } catch (NoResultException e) {
+	    	return null;
+	    }
 	}
 	
 	@GET
@@ -74,16 +81,21 @@ public class UserService {
 		String[] split = authorization.split(" ");
 	    String userEmail = split[0];
 	    
-	    Map<String, String> messageData = ParserJson.fromString(messageContent);
-	    String object = messageData.get("object");
-	    String corpus = messageData.get("corpus");
-	    
-	    if(object != null && corpus != null) {
-	    	String msg = userController.sendMessageToConsultant(userEmail, object, corpus);
-	    	return Response.ok(msg).build();
-	    } else {
-	    	return Response.status(400).entity("La formulazione del messaggio non è corretta").build();
+	    try {
+	    	Map<String, String> messageData = ParserJson.fromString(messageContent);
+		    String object = messageData.get("object");
+		    String corpus = messageData.get("corpus");
+		    
+		    if(object != null && corpus != null) {
+		    	String msg = userController.sendMessageToConsultant(userEmail, object, corpus);
+		    	return Response.ok(msg).build();
+		    } else {
+		    	return Response.status(400).entity("La formulazione del messaggio non è corretta").build();
+		    }
+	    } catch (Exception e) {
+	    	return Response.status(500).entity("Errore nella formulazione della richiesta").build();
 	    }
+	    
 	    
 	}
 
