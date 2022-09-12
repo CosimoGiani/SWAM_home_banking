@@ -1,4 +1,4 @@
-package controllerTest;
+package rest.controllerTest;
 
 import java.util.ArrayList;
 import java.util.List;

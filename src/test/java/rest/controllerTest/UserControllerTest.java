@@ -1,4 +1,4 @@
-package controllerTest;
+package rest.controllerTest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
