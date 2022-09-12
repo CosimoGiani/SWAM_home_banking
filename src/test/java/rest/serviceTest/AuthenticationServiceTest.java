@@ -84,7 +84,7 @@ public class AuthenticationServiceTest extends ServiceTest {
 	@Test
 	public void testCheckAuthenticationOtp() {
 		
-		OTP = getOtp();
+		OTP = OTPUtils.getOtp(user, decryptedPassword);
 		Assertions.assertNotEquals("", OTP);
 		System.out.println("OTP generata: " + OTP);
 		
@@ -139,7 +139,7 @@ public class AuthenticationServiceTest extends ServiceTest {
 	@Test
 	public void testRemoveOTP() {
 		
-		OTP = getOtp();
+		OTP = OTPUtils.getOtp(user, decryptedPassword);
 		Assertions.assertNotEquals("", OTP);
 		System.out.println("OTP generata: " + OTP);
 		
@@ -176,33 +176,6 @@ public class AuthenticationServiceTest extends ServiceTest {
 		body = response.getBody().asString();
 		Assertions.assertEquals("", body);
 		
-	}
-	
-	private String getOtp() {
-	    
-	    RequestSpecification request = RestAssured.given();
-		request.header("Content-Type", "application/json");
-		request.body("{'email': '" + user.getEmail() + "', 'password': '"+decryptedPassword+"'}");
-		
-		Response response = executePost(request, "login/get-otp");
-		response.then().statusCode(200);
-		String body = response.getBody().asString();
-		Assertions.assertEquals("OTP generato con successo", body);
-		
-		String fileName = "secretOTP.txt";
-		String test_folder_path = getDeploymentsPath() + "test_files/";
-		
-		System.out.println(test_folder_path + fileName);
-		
-		String OTP = "";
-		try {
-			FileInputStream inputStream = new FileInputStream(test_folder_path + fileName);
-			OTP = IOUtils.toString(inputStream, "UTF8");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-		
-		return OTP;
 	}
 	
 

@@ -95,7 +95,7 @@ public abstract class ServiceTest {
 	}
 
 	
-	protected static String getDeploymentsPath() {
+	public static String getDeploymentsPath() {
 		return deploymentsPath;
 	}
 	
