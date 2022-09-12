@@ -57,8 +57,10 @@ public class OneTimePasswordAuthenticator implements ContainerRequestFilter {
 		otpAndTime.put("otp", secret_otp);
 		otpAndTime.put("timeToExpire", otpDefaultDuration);
 		
-		otpTimerTasks.put(email, new OTPTimerTask(this, email));
-		otpTimer.scheduleAtFixedRate(otpTimerTasks.get(email),  1000 * 60, 1000 * 60);
+		if(!otpTimerTasks.containsKey(email)) {
+			otpTimerTasks.put(email, new OTPTimerTask(this, email));
+			otpTimer.scheduleAtFixedRate(otpTimerTasks.get(email),  1000 * 60, 1000 * 60);
+		}
 		
 		userOtpMap.put(email, otpAndTime);
 		this.sendOTP(email);
