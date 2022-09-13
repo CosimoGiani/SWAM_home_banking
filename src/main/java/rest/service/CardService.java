@@ -36,8 +36,6 @@ public class CardService {
 				boolean cardBlocked = cardController.blockCard(card_id);
 				if(cardBlocked)
 					return Response.accepted("Carta bloccata con successo").build();
-				else
-					return Response.notModified("Qualcosa è andato storto").build();
 			}
 			return Response.status(403).build(); // in questo caso l'utente autenticato non possiede la carta
 		} catch (Exception e) {
