@@ -40,8 +40,7 @@ public class RegistrationService {
 	@POST
 	@Path("send")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response register(MultipartFormDataInput input) {
-
+	public Response register(MultipartFormDataInput input) throws IOException {
 		try {
 			InputStream uploadedInputStream = input.getFormDataPart("PDF", InputStream.class, null);
 			String email = input.getFormDataPart("email", String.class, null);
@@ -49,13 +48,12 @@ public class RegistrationService {
 		    String msg = registrationController.createAccount(uploadedInputStream, email, password);
 			if (msg.equals("Account created successfully")) {
 				return Response.status(200).entity(msg).build();
-			} else if (msg.equals("Interal Error")) {
+			} else if (msg.equals("Internal Error")) {
 				return Response.status(500).entity(msg).build();
 			} else
 				return Response.notAcceptable(null).entity(msg).build();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return Response.status(500).entity("Internal Error").build();
-		}		
+		} catch (NullPointerException e) {
+			return Response.notAcceptable(null).entity("Request not acceptable").build();
+		}
 	}
 }

@@ -77,10 +77,20 @@ public class RegistrationController {
 			
 		} catch (IllegalArgumentException e)	{
 			return e.getMessage();
+	
+		} catch(com.spire.pdf.packages.sprlMc e) {
+			System.out.println("Il documento caricato non è quello corretto");
+			return "The uploaded document is incorrect";
+			
+		} catch (NoResultException e) {
+			// e.printStackTrace();
+			System.out.println("Nessun Consulente è disponibile...");
+			return "Internal Error";
 			
 		} catch (Exception e) {
+			// System.out.println(e.getClass().toString());
 			e.printStackTrace();
-			return "Interal Error";
+			return "Internal Error";
 		}
 	}
 	
@@ -120,8 +130,10 @@ public class RegistrationController {
 		/* 
 		 * Per prendere il Consultant che ha meno Users associati
 		 */
+		
 		List<Long> consultantIds = consultantDao.getAllConsultantsIds();
-
+		
+		
 		Long consultant_selected = Long.valueOf(0); 
 		int minUsersAssociated = 10000000;
 		int currentUsersAssociated;
