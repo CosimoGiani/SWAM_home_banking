@@ -8,12 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import javax.ws.rs.NotFoundException;
 
 import model.BankAccount;
 import model.User;
 
-//@SuppressWarnings("serial")
 @RequestScoped
 public class UserDao implements Serializable {
 
