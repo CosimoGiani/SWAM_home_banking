@@ -51,8 +51,10 @@ public class ConsultantAuthenticator implements ContainerRequestFilter {
 		tokenAndTime.put("token", token);
 		tokenAndTime.put("timeToExpire", tokenDefaultDuration);
 		
-		tokenTimerTasks.put(identificationNumber, new TokenTimerTask(this, identificationNumber));
-		tokenTimer.scheduleAtFixedRate(tokenTimerTasks.get(identificationNumber), 1000 * 60, 1000 * 60);
+		if(!tokenTimerTasks.containsKey(identificationNumber)) {
+			tokenTimerTasks.put(identificationNumber, new TokenTimerTask(this, identificationNumber));
+			tokenTimer.scheduleAtFixedRate(tokenTimerTasks.get(identificationNumber), 1000 * 60, 1000 * 60);
+		}
 		
 		tokenMap.put(identificationNumber, tokenAndTime);
 		return token;

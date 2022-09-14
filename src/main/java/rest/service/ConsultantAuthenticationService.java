@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.JsonSyntaxException;
+
 import ConsultantAuthentication.AuthenticatedConsultant;
 import rest.controller.ConsultantAuthenticationController;
 import utils.ParserJson;
@@ -32,12 +34,15 @@ public class ConsultantAuthenticationService {
 			String identificationNumber = credentialsData.get("identificationNumber");
 			String password = credentialsData.get("password");
 			
-			System.out.println(identificationNumber);
-			System.out.println(password);
+			// System.out.println(identificationNumber);
+			// System.out.println(password);
 			
 			if(authController.checkConsultantCredentials(identificationNumber, password)) {
 				
 				String token = authController.generateToken(identificationNumber);
+				
+				System.out.println("\nToken per il consulente "+ identificationNumber + " è attivo.\n");
+				
 				String response = "{ \n"
 						+ "   'response': 'Autenticazione Riuscita', \n"
 						+ "   'token': '" + token + "' \n"
@@ -46,9 +51,11 @@ public class ConsultantAuthenticationService {
 			} else {
 				return Response.notAcceptable(null).entity("Credenziali non valide").build();
 			}
+		}  catch (JsonSyntaxException e) {
+			return Response.notAcceptable(null).entity("Errore nella formulazione delle richiesta").build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.notAcceptable(null).entity("Errore nella generazione del token di accesso").build();
+			return Response.status(500).entity("Errore nella generazione del token di accesso").build();
 		}
 		
 	}
