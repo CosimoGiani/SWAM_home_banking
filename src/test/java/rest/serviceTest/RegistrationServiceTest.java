@@ -1,5 +1,8 @@
 package rest.serviceTest;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Paths;
@@ -14,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import model.User;
 
 public class RegistrationServiceTest extends ServiceTest{
 	
@@ -74,6 +78,24 @@ public class RegistrationServiceTest extends ServiceTest{
 		String body = response.getBody().asString();
 		
 		Assertions.assertEquals("Account created successfully", body);
+		
+		// Testiamo dunque che sia possibile ottenere l'OTP con questo nuovo account (dunque accedere)
+		User user = mock(User.class);
+		when(user.getEmail()).thenReturn(email);
+		String OTP = OTPUtils.getOtp(user, password);
+		
+		Assertions.assertNotEquals("", OTP);
+		
+		// e dunque che l'OTP sia valido
+		setBaseURL("/home.banking/api/auth/");
+		
+		request = RestAssured.given();
+		request.header("Authorization", user.getEmail() + " " + OTP); 
+		
+		response = executeGet(request, "login/check-otp");
+		response.then().statusCode(200);
+		body = response.getBody().asString();
+		Assertions.assertEquals("Utente autenticato con successo", body);
 	}
 	
 	@Test
