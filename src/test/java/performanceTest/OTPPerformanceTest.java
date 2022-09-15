@@ -1,4 +1,4 @@
-package performance;
+package performanceTest;
 
 import java.sql.SQLException;
 
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import otpStateful.OneTimePasswordAuthenticator;
 
-public class PerformanceTest {
+public class OTPPerformanceTest {
 
 	String decryptedPassword;
 	OneTimePasswordAuthenticator otpAuthenticator;
@@ -176,14 +176,14 @@ public class PerformanceTest {
 	}
 	
 	@Test
-	public void testAuthentication_10M() {
+	public void testAuthentication_5M() {
 		Runtime r = Runtime.getRuntime();
 		Long memoryBefore;
 		Long memoryEnd;
 		System.gc();
 		memoryBefore = r.totalMemory() - r.freeMemory();
 		
-		for(int i = 0; i < 10000000; i++) {
+		for(int i = 0; i < 5000000; i++) {
 			otpAuthenticator.generateOTP("prova"+i+"@prova.it");
 			if(i%100000 == 0)
 				System.out.println(i);
