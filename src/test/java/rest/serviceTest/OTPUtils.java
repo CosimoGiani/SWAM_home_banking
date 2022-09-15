@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Assertions;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import model.Consultant;
 import model.User;
 
 public class OTPUtils {
 	
-
 	public static String getOtp(User user, String decryptedPassword) {
 		    
 		    RequestSpecification request = RestAssured.given();
@@ -42,6 +42,6 @@ public class OTPUtils {
 			} 
 			
 			return OTP;
-		}
+	}
 
 }

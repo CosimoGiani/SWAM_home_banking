@@ -19,6 +19,7 @@ import dao.BankAccountDao;
 import dao.ConsultantDao;
 import dao.UserDao;
 import model.BankAccount;
+import model.Card;
 import model.Consultant;
 import model.Transaction;
 import model.User;
@@ -35,6 +36,7 @@ public class ConsultantControllerTest {
 	private BankAccountDao accountDao;
 	private BankAccount account;
 	private BankAccount mockedAccount;
+	private Card mockedCard;
 	
 	@BeforeEach
 	public void setup() throws IllegalAccessException {
@@ -48,10 +50,10 @@ public class ConsultantControllerTest {
 		user = new User(UUID.randomUUID().toString());
 		user.setEmail("prova1@example.com");
 		user.setEncryptedPassword("password");
-		//user.setConsultant(consultant);
 		account = new BankAccount(UUID.randomUUID().toString());
 		mockedAccount = mock(BankAccount.class);
 		mockedConsultant = mock(Consultant.class);
+		mockedCard = mock(Card.class);
 		FieldUtils.writeField(consultantController, "consultantDao", consultantDao, true);
 		FieldUtils.writeField(consultantController, "userDao", userDao, true);
 		FieldUtils.writeField(consultantController, "accountDao", accountDao, true);
@@ -185,6 +187,22 @@ public class ConsultantControllerTest {
 		assertThrows(Exception.class, ()->{
 			consultantController.getBankAccountLazy(123L, 1L);
 		});
+	}
+	
+	@Test
+	public void testUserOwnsCard() {
+		List<BankAccount> accounts = new ArrayList<BankAccount>();
+		accounts.add(mockedAccount);
+		user.setBankAccounts(accounts);
+		List<Card> cards = new ArrayList<Card>();
+		cards.add(mockedCard);
+		when(userDao.getUserIdFromEmail(user.getEmail())).thenReturn(1L);
+		when(userDao.getAssociatedBankAccounts(1L)).thenReturn(user.getBankAccounts());
+		when(mockedAccount.getId()).thenReturn(12L);
+		when(accountDao.getBankAccountCards(12L)).thenReturn(cards);
+		when(mockedCard.getId()).thenReturn(123L);
+		assertTrue(consultantController.userOwnsCard(user.getEmail(), 123L));
+		assertFalse(consultantController.userOwnsCard(user.getEmail(), 45L));
 	}
 
 }

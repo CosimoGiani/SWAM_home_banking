@@ -127,5 +127,20 @@ public class ConsultantController {
 	public void updateMassimale(Long cardId, float massimale) {
 		cardDao.updateMassimale(cardId, massimale);
 	}
+	
+	public boolean userOwnsCard(String email, Long card_id) {
+		Long user_id = userDao.getUserIdFromEmail(email);
+		List<BankAccount> associatedBankAccounts = userDao.getAssociatedBankAccounts(user_id);
+		
+		List<Card> associatedCards;
+		for(BankAccount b : associatedBankAccounts) {
+			associatedCards = accountDao.getBankAccountCards(b.getId());
+			for(Card c : associatedCards) {
+				if(card_id == c.getId())
+					return true;
+			}
+		}
+		return false;
+	}
 
 }

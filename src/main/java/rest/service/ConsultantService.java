@@ -250,9 +250,12 @@ public class ConsultantService {
 			Long cardId = Long.parseLong(data.get("cardId"));
 			
 			if (controller.checkUserIsAssociated(consultantId, userId)) {
+				String email = controller.getUserDetails(userId, true).getEmail();
 				if (controller.getBankAccountOwnedByUser(accountId, userId) != null) {
-					controller.removeCard(cardId);
-					return Response.ok().entity("Carta rimossa con successo").build();
+					if (controller.userOwnsCard(email, cardId)) {
+						controller.removeCard(cardId);
+						return Response.ok().entity("Carta rimossa con successo").build();
+					} else return Response.notAcceptable(null).entity("Carta non rimossa: carta non appartente all'utente o non esistente").build();
 				} else return Response.notAcceptable(null).entity("Carta non rimossa").build();
 			} else return Response.notAcceptable(null).entity("Carta non rimossa").build();
 		} catch (Exception e) {

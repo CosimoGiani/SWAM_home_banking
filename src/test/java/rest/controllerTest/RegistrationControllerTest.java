@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.NoResultException;
+
 import pdf.PdfUtil;
 import rest.controller.RegistrationController;
 
@@ -112,6 +114,24 @@ public class RegistrationControllerTest {
 		String password = "1234";
 		when(pdfUtil.extractData(uploadedInputStream)).thenThrow(new IllegalArgumentException("Name or Surname contains a number!"));
 		assertEquals("Name or Surname contains a number!", registrationController.createAccount(uploadedInputStream, email, password));
+	}
+	
+	@Test
+	public void testCreateAccountWhenUploadedDocumentIsIncorrect() throws IOException {
+		InputStream uploadedInputStream = mock(InputStream.class);
+		String email = "user1@example.com";
+		String password = "1234";
+		when(pdfUtil.extractData(uploadedInputStream)).thenThrow(new com.spire.pdf.packages.sprlMc("The uploaded document is incorrect"));
+		assertEquals("The uploaded document is incorrect", registrationController.createAccount(uploadedInputStream, email, password));
+	}
+	
+	@Test
+	public void testCreateAccountWhenNoResult() throws IOException {
+		InputStream uploadedInputStream = mock(InputStream.class);
+		String email = "user1@example.com";
+		String password = "1234";
+		when(pdfUtil.extractData(uploadedInputStream)).thenThrow(new NoResultException("Internal Error"));
+		assertEquals("Internal Error", registrationController.createAccount(uploadedInputStream, email, password));
 	}
 	
 }
