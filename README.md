@@ -1,5 +1,9 @@
 # Home-Banking Application
 
+<p align="center">
+  <img src="https://github.com/CosimoGiani/SWAM_home_banking/blob/main/images/logo.png" style="width:800px;">
+</p>
+
 Progettazione e implementazione di un'applicazione realizzata in architettura RESTful con un contesto operativo di home-banking. \
 Progetto per l'esame di Software Architecture and Methodologies (SWAM) tenuto dal prof. Enrico Vicario e previsto dal corso di laurea magistrale in Ingegneria Informatica dell'Università degli Studi di Firenze, A.A. 2021/2022.
 
