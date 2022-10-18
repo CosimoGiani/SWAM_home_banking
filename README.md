@@ -5,7 +5,7 @@
 </p>
 
 Progettazione e implementazione di un'applicazione realizzata in architettura RESTful con un contesto operativo di home-banking. \
-Progetto per l'esame di Software Architecture and Methodologies (SWAM) tenuto dal prof. Enrico Vicario e previsto dal corso di laurea magistrale in Ingegneria Informatica dell'Università degli Studi di Firenze, A.A. 2021/2022.
+Progetto per l'esame di Software Architecture and Methodologies (SWAM) tenuto dal prof. Enrico Vicario, in collaborazione con il Dott. Boris Brizzi, l’Ing. Jacopo Parri e l’Ing. Samuele Sampietro, e previsto dal corso di laurea magistrale in Ingegneria Informatica dell'Università degli Studi di Firenze, A.A. 2021/2022.
 
 ## Funzionalità
 L'intento dell'elaborato è stato quello di progettare e implementare un'applicazione in architettura RESTful, composta principalmente da un modulo di backend, che espone i servizi REST e si interfaccia ad un DBMS. Il contesto operativo è stato quello dell'Home-banking come pretesto per lo sviluppo.
